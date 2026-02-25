@@ -26,14 +26,15 @@
             color: var(--text-color);
         }
 
+        /* 背景キャンバス */
         #mascotCanvas {
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1;
-            cursor: default;
         }
 
+        /* UIレイヤー */
         .ui-layer {
             position: relative;
             z-index: 10;
@@ -42,10 +43,10 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            pointer-events: none; 
+            pointer-events: none; /* 背後のキャンバス操作を可能にする */
         }
 
-        /* ロゴデザイン：グラデーションと縁取り */
+        /* ロゴデザイン：グラデーションとクッキリした縁取り */
         .logo-title {
             position: relative;
             margin-bottom: 2rem;
@@ -75,7 +76,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            pointer-events: auto;
+            pointer-events: auto; /* ボタンはクリック可能に */
         }
 
         .btn {
@@ -110,7 +111,7 @@
             box-shadow: 0 2px 0 #ff5a5f;
         }
 
-        /* モーダル */
+        /* モーダル（ポップアップ） */
         .modal {
             display: none;
             position: fixed;
@@ -133,6 +134,7 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             line-height: 1.8;
             font-size: 0.95rem;
+            pointer-events: auto;
         }
 
         .close-btn {
@@ -143,6 +145,7 @@
         h2 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.4rem; }
         .modal-body ul { padding-left: 20px; }
 
+        /* フッター */
         footer {
             position: absolute; bottom: 20px; width: 100%;
             text-align: center; z-index: 10; pointer-events: auto;
@@ -191,10 +194,10 @@
             <h2>使用方法</h2>
             <div class="modal-body">
                 <ul>
-                    <li><strong>基本操作:</strong> フォルダ内の「DesktopMascot.exe」を起動してください。</li>
-                    <li><strong>Google連携:</strong> カレンダーやドライブと同期してスケジュール管理が可能です。</li>
+                    [cite_start]<li><strong>起動:</strong> 展開したフォルダ内の「DesktopMascot.exe」を起動してください [cite: 1]。</li>
+                    [cite_start]<li><strong>設定:</strong> 右クリックメニューからAIやGoogle連携の設定が可能です [cite: 2, 3]。</li>
                     <li><strong>お世話:</strong> 撫でたり話しかけたりして、パートナーを育ててください。</li>
-                    <li><strong>Webお楽しみ要素:</strong> 背景のキューブをクリックで跳ねさせたり、ドラッグで投げ飛ばしたりできます！</li>
+                    <li><strong>Web要素:</strong> 背景のキューブをクリックで跳ねさせたり、ドラッグで運べます！</li>
                 </ul>
             </div>
         </div>
@@ -206,8 +209,9 @@
             <h2>利用規約</h2>
             <div class="modal-body">
                 <ul>
-                    <li><strong>二次配布の禁止:</strong> exeファイル化したデータの配布や譲渡は固く禁じます。</li>
-                    <li><strong>免責事項:</strong> 本ソフトの使用によって発生したいかなる問題についても責任を負いません。</li>
+                    [cite_start]<li><strong>二次配布禁止:</strong> 個人情報保護のため、exeファイル化したデータの配布や譲渡は固く禁じます [cite: 1]。</li>
+                    <li><strong>改造の制限:</strong> 開発キットの改造は自由ですが、自作発言は禁止です。</li>
+                    [cite_start]<li><strong>免責事項:</strong> 本ソフトの使用によって発生した損害について、製作者は責任を負いません [cite: 1]。</li>
                 </ul>
             </div>
         </div>
@@ -218,12 +222,14 @@
             <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
             <h2>プライバシーポリシー</h2>
             <div class="modal-body">
-                <p><strong>個人データ:</strong> 本アプリが取得したスケジュール等のデータは利用者のPC内のみに保存され、外部へ送信されることはありません。</p>
+                <p><strong>Googleデータ:</strong> 本アプリはGoogleカレンダーの表示およびGoogleドライブへの保存機能のためにデータにアクセスします。</p>
+                <p><strong>保存場所:</strong> 取得した個人データは利用者のPC内のみに保存され、外部サーバーへ送信されることは一切ありません。</p>
             </div>
         </div>
     </div>
 
     <script>
+        // --- モーダル制御ロジック ---
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function closeModalOnOuter(event) { if (event.target.className === "modal") { event.target.style.display = "none"; } }
@@ -248,7 +254,7 @@
             init() {
                 this.size = 35 + Math.random() * 40;
                 this.x = Math.random() * canvas.width;
-                this.y = -this.size - (Math.random() * 200);
+                this.y = -this.size - (Math.random() * 200); // 画面の上から
                 this.speedY = 0.8 + Math.random() * 1.2;
                 this.speedX = (Math.random() - 0.5) * 0.8;
                 this.rotation = Math.random() * Math.PI * 2;
@@ -260,34 +266,30 @@
             }
             update() {
                 if (this.isDragging) {
-                    // マウス位置に滑らかに追従
                     this.x += (mouseX - this.x) * 0.3;
                     this.y += (mouseY - this.y) * 0.3;
-                    this.speedX = mouseX - lastMX; // 投げた時の速度用
+                    this.speedX = mouseX - lastMX; 
                     this.speedY = mouseY - lastMY;
                 } else {
                     this.y += this.speedY;
                     this.x += this.speedX;
                     this.rotation += this.rotSpeed;
-                    this.speedY += 0.15; // 重力
+                    this.speedY += 0.12; // 重力
                     this.timer--;
                     
                     if (this.timer <= 0) { this.expr = Math.floor(Math.random() * 4); this.timer = 150 + Math.random() * 300; }
                     
-                    // 地面バウンド
-                    if (this.y > canvas.height - this.size/2) {
-                        this.y = canvas.height - this.size/2;
-                        this.speedY *= -0.4; // 跳ね返り減衰
-                        this.speedX *= 0.8;
+                    // ★ 修正点：地面での積み重なりを廃止
+                    // 画面の底を通り抜けたら、再び上から降ってくるようにする
+                    if (this.y > canvas.height + this.size) {
+                        this.init();
                     }
-                    // 壁
-                    if (this.x < this.size/2 || this.x > canvas.width - this.size/2) {
-                        this.speedX *= -0.7;
-                        this.x = Math.max(this.size/2, Math.min(canvas.width - this.size/2, this.x));
+
+                    // 壁での跳ね返り
+                    if (this.x < 0 || this.x > canvas.width) {
+                        this.speedX *= -0.8;
+                        this.x = Math.max(0, Math.min(canvas.width, this.x));
                     }
-                    
-                    // 画面外（上）に飛びすぎた場合
-                    if (this.y < -500) this.init();
                 }
             }
             draw() {
@@ -298,15 +300,15 @@
                 ctx.beginPath(); ctx.roundRect(-this.size/2, -this.size/2, this.size, this.size, 6); ctx.fill(); ctx.stroke();
                 const eyeR = this.size * 0.08, eyeX = this.size * 0.2, eyeY = -this.size * 0.1;
                 ctx.fillStyle = "#333"; ctx.strokeStyle = "#333";
-                if (this.expr === 1) { 
+                if (this.expr === 1) { // 睡眠
                     ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
                     ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
-                } else if (this.expr === 2) { 
+                } else if (this.expr === 2) { // いじけ
                     ctx.fillRect(-eyeX - eyeR, eyeY, eyeR*2, 1.5); ctx.fillRect(eyeX - eyeR, eyeY, eyeR*2, 1.5);
                     ctx.beginPath(); ctx.arc(0, this.size*0.2, eyeR, Math.PI, 0); ctx.stroke();
-                } else if (this.expr === 3 || this.isDragging) { 
+                } else if (this.expr === 3 || this.isDragging) { // 目が回る
                     ctx.font = `bold ${this.size*0.25}px Arial`; ctx.fillText("@", -eyeX - eyeR, eyeY + eyeR); ctx.fillText("@", eyeX - eyeR, eyeY + eyeR);
-                } else { 
+                } else { // 通常
                     ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI*2); ctx.fill();
                     ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI*2); ctx.fill();
                     ctx.beginPath(); ctx.arc(0, this.size*0.1, eyeR, 0, Math.PI); ctx.stroke();
@@ -326,36 +328,23 @@
 
         for (let i = 0; i < 12; i++) cubes.push(new MascotCube());
 
-        // --- インタラクション修正：クリックとドラッグを分離 ---
+        // --- インタラクション ---
         canvas.addEventListener('mousedown', e => {
             const rect = canvas.getBoundingClientRect();
-            startMX = e.clientX - rect.left;
-            startMY = e.clientY - rect.top;
-            isMouseDown = true;
-            dragStartTime = Date.now();
-
+            startMX = e.clientX - rect.left; startMY = e.clientY - rect.top;
+            isMouseDown = true; dragStartTime = Date.now();
             for (let i = cubes.length - 1; i >= 0; i--) {
-                if (cubes[i].isHit(startMX, startMY)) {
-                    draggedCube = cubes[i];
-                    break;
-                }
+                if (cubes[i].isHit(startMX, startMY)) { draggedCube = cubes[i]; break; }
             }
         });
 
         window.addEventListener('mousemove', e => {
             const rect = canvas.getBoundingClientRect();
-            lastMX = mouseX;
-            lastMY = mouseY;
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-            
+            lastMX = mouseX; lastMY = mouseY;
+            mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
             if (draggedCube && isMouseDown) {
-                // 一定以上動かしたらドラッグ開始
                 const dist = Math.hypot(mouseX - startMX, mouseY - startMY);
-                if (dist > 5) {
-                    draggedCube.isDragging = true;
-                    canvas.style.cursor = "grabbing";
-                }
+                if (dist > 5) { draggedCube.isDragging = true; canvas.style.cursor = "grabbing"; }
             } else {
                 let hovering = false;
                 cubes.forEach(c => { if(c.isHit(mouseX, mouseY)) hovering = true; });
@@ -367,17 +356,12 @@
             if (draggedCube) {
                 const dragDuration = Date.now() - dragStartTime;
                 const dist = Math.hypot(mouseX - startMX, mouseY - startMY);
-
-                // ドラッグせずに短くクリックした場合は跳ねる！
                 if (!draggedCube.isDragging || (dragDuration < 200 && dist < 10)) {
                     draggedCube.bounce();
                 }
-                
-                draggedCube.isDragging = false;
-                draggedCube = null;
+                draggedCube.isDragging = false; draggedCube = null;
             }
-            isMouseDown = false;
-            canvas.style.cursor = "default";
+            isMouseDown = false; canvas.style.cursor = "default";
         });
 
         function animate() {
