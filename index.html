@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="google-site-verification" content="ここを書き換えてください" />
+
     <title>Desktop Mascot - Official Site</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
     <style>
@@ -33,19 +36,25 @@
         .logo-title h1 {
             margin: 0; font-size: 3.5rem; font-weight: 900;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--pink-color), var(--primary-color));
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1px white; paint-order: stroke fill;
+            background-size: 200% auto; -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1px white;
+            paint-order: stroke fill;
         }
 
         @keyframes gradientAnim { to { background-position: 200% center; } }
 
-        .button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; pointer-events: auto; }
+        .button-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; pointer-events: auto;
+        }
 
+        /* aタグでもボタンと同じ見た目になるように調整 */
         .btn {
             background: white; border: 2.5px solid var(--primary-color);
             padding: 14px 25px; border-radius: 12px; font-size: 1rem; font-weight: 800;
             color: var(--text-color); cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 var(--primary-color);
             font-family: 'M PLUS Rounded 1c', sans-serif;
+            text-decoration: none; display: flex; justify-content: center; align-items: center; box-sizing: border-box;
         }
         .btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--primary-color); background: #f0faff; }
         
@@ -61,12 +70,15 @@
         .modal-content {
             background: white; padding: 25px; border-radius: 25px;
             width: 90%; max-width: 420px; max-height: 95vh; overflow-y: auto; overflow-x: hidden;
-            position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); box-sizing: border-box;
+            position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-sizing: border-box;
         }
 
         #gameContainer {
-            width: fit-content; max-width: 100%; height: 500px; margin: 0 auto; background: #fff; border: 4px solid #333;
-            border-radius: 10px; position: relative; overflow: hidden; touch-action: none; box-sizing: content-box;
+            width: fit-content; max-width: 100%; height: 500px;
+            margin: 0 auto; background: #fff; border: 4px solid #333;
+            border-radius: 10px; position: relative; overflow: hidden; touch-action: none;
+            box-sizing: content-box;
         }
         #gameCanvas { display: block; max-width: 100%; height: auto; margin: 0 auto; }
         
@@ -79,7 +91,8 @@
         .game-close-btn {
             display: block; width: fit-content; margin: 15px auto 5px;
             background: transparent; border: none; color: #aaa;
-            font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; pointer-events: auto;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            transition: 0.3s; pointer-events: auto;
         }
         .game-close-btn:hover { color: #333; transform: scale(1.1); }
 
@@ -105,8 +118,10 @@
         <div class="button-grid">
             <button class="btn btn-game" onclick="openGame()">🎮 ゲーム広場（進化キューブ）</button>
             <button class="btn" onclick="openModal('howToUseModal')">📖 使用方法</button>
-            <button class="btn" onclick="window.open('terms.html', '_blank')">📜 利用規約</button>
-            <button class="btn" onclick="window.open('privacy.html', '_blank')">🔒 プライバシー</button>
+            
+            <a href="terms.html" target="_blank" class="btn">📜 利用規約</a>
+            <a href="privacy.html" target="_blank" class="btn">🔒 プライバシー</a>
+            
             <button class="btn" onclick="openModal('downloadModal')">📥 ダウンロード</button>
         </div>
     </div>
@@ -336,21 +351,11 @@
                             score += CUBE_TYPES[idx+1].score; 
                             document.getElementById('scoreVal').innerText = score;
                         } else {
-                            // ★最大サイズ消滅の演出（遅延処理）★
-                            bodyA.label = 'merged'; // 多重判定を防止
-                            bodyB.label = 'merged';
-                            score += 1000; 
-                            document.getElementById('scoreVal').innerText = score;
-                            
-                            // 消える直前に空中で静止し、半透明になる
-                            Body.setStatic(bodyA, true);
-                            Body.setStatic(bodyB, true);
-                            bodyA.render.opacity = 0.5;
-                            bodyB.render.opacity = 0.5;
-
-                            setTimeout(() => {
-                                Matter.World.remove(engine.world, [bodyA, bodyB]);
-                            }, 1200); // 1.2秒後に完全に消す
+                            bodyA.label = 'merged'; bodyB.label = 'merged';
+                            score += 1000; document.getElementById('scoreVal').innerText = score;
+                            Body.setStatic(bodyA, true); Body.setStatic(bodyB, true);
+                            bodyA.render.opacity = 0.5; bodyB.render.opacity = 0.5;
+                            setTimeout(() => { Matter.World.remove(engine.world, [bodyA, bodyB]); }, 1200);
                         }
                     }
                 });
@@ -365,7 +370,6 @@
                                 body.restCounter = (body.restCounter || 0) + 1;
                                 if (body.restCounter > 10) { 
                                     gameActive = false; 
-                                    // ★ゲームオーバー時も少し間を持たせる（0.5秒）★
                                     setTimeout(() => { alert("GAME OVER! SCORE: " + score); closeGame(); }, 500);
                                 }
                             } else { body.restCounter = 0; }
@@ -380,13 +384,12 @@
                 c.beginPath(); c.moveTo(-100, DEAD_LINE_Y); c.lineTo(gameWidth + 100, DEAD_LINE_Y); c.stroke(); c.setLineDash([]);
                 
                 engine.world.bodies.forEach(body => {
-                    // opacityプロパティを反映させて描画
                     if (body.label && (body.label.startsWith('c_') || body.label === 'merged')) {
                         const labelParts = body.label === 'merged' ? ['c', CUBE_TYPES.length - 1] : body.label.split('_');
                         const idx = parseInt(labelParts[1]);
-                        c.globalAlpha = body.render.opacity || 1; // 半透明の適用
+                        c.globalAlpha = body.render.opacity || 1; 
                         drawFace(c, body.position.x, body.position.y, CUBE_TYPES[idx].size, body.angle, CUBE_TYPES[idx].expr);
-                        c.globalAlpha = 1; // 戻す
+                        c.globalAlpha = 1; 
                     }
                 });
             });
