@@ -95,16 +95,9 @@
 
         h2 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; font-size: 1.3rem; margin-top: 0; }
         
-        /* ★図鑑用のCSS★ */
-        .collection-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;
-        }
-        .collection-item {
-            display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; font-weight: bold; color: #555;
-        }
-        .collection-canvas {
-            width: 60px; height: 60px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
+        .collection-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .collection-item { display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; font-weight: bold; color: #555; }
+        .collection-canvas { width: 60px; height: 60px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         @media (max-width: 400px) { .collection-grid { grid-template-columns: repeat(3, 1fr); } }
 
         footer { position: absolute; bottom: 15px; width: 100%; text-align: center; z-index: 10; font-size: 0.8rem; color: #888; pointer-events: auto; }
@@ -121,7 +114,7 @@
             <button class="btn btn-game" onclick="openGame()">🎮 ゲーム広場（進化キューブ）</button>
             <button class="btn" onclick="openModal('howToUseModal')">📖 使用方法</button>
             <button class="btn" onclick="openModal('termsModal')">📜 利用規約</button>
-            <button class="btn" onclick="openModal('privacyModal')">🔒 プライバシー</button>
+            <button class="btn" onclick="window.open('privacy.html', '_blank')">🔒 プライバシー</button>
             <button class="btn" onclick="openModal('downloadModal')">📥 ダウンロード</button>
         </div>
     </div>
@@ -150,7 +143,6 @@
 
     <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>使用方法</h2><p>DesktopMascot.exeを起動してください。背景の子はドラッグやクリックで遊べます。</p><button class="game-close-btn" onclick="closeModal('howToUseModal')">＞ 閉じる ＜</button></div></div>
     <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>利用規約</h2><p>二次配布禁止。改造は可能ですが自作発言は禁止です。</p><button class="game-close-btn" onclick="closeModal('termsModal')">＞ 閉じる ＜</button></div></div>
-    <div id="privacyModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>プライバシー</h2><p>データはローカル保存のみ。外部送信は行いません。</p><button class="game-close-btn" onclick="closeModal('privacyModal')">＞ 閉じる ＜</button></div></div>
     <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>ダウンロード</h2><p>現在準備中です。BOOTHでの公開をお待ちください。</p><button class="game-close-btn" onclick="closeModal('downloadModal')">＞ 閉じる ＜</button></div></div>
 
     <div id="collectionModal" class="modal">
@@ -165,26 +157,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
     <script>
-        // UI制御
         function openModal(id) { document.getElementById(id).style.display = "flex"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function closeModalOnOuter(event) { if (event.target.className === "modal") event.target.style.display = "none"; }
         window.addEventListener('keydown', (e) => { if (e.key === "Escape") document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); });
 
-        // --- 共通表情描画 ---
         function drawFace(ctx, x, y, size, rotation, expr) {
             ctx.save(); ctx.translate(x, y); ctx.rotate(rotation);
             const eyeR = size * 0.08, eyeX = size * 0.2, eyeY = -size * 0.1;
             ctx.fillStyle = "#333"; ctx.strokeStyle = "#333"; ctx.lineWidth = Math.max(1, size * 0.03);
-            if (expr === 1) { // 睡眠
+            if (expr === 1) { 
                 ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
                 ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
-            } else if (expr === 2) { // いじけ
+            } else if (expr === 2) { 
                 ctx.fillRect(-eyeX - eyeR, eyeY, eyeR * 2, 1.5); ctx.fillRect(eyeX - eyeR, eyeY, eyeR * 2, 1.5);
                 ctx.beginPath(); ctx.arc(0, size * 0.2, eyeR, Math.PI, 0); ctx.stroke();
-            } else if (expr === 3) { // 目が回る
+            } else if (expr === 3) { 
                 ctx.font = `bold ${size * 0.25}px Arial`; ctx.fillText("@", -eyeX - eyeR, eyeY + eyeR); ctx.fillText("@", eyeX - eyeR, eyeY + eyeR);
-            } else { // 通常
+            } else { 
                 ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI * 2); ctx.fill();
                 ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI * 2); ctx.fill();
                 ctx.beginPath(); ctx.arc(0, size * 0.1, eyeR, 0, Math.PI); ctx.stroke();
@@ -192,7 +182,6 @@
             ctx.restore();
         }
 
-        // --- 背景アニメーション ---
         const bCanvas = document.getElementById('mascotCanvas');
         const bCtx = bCanvas.getContext('2d');
         let backCubes = [];
@@ -259,7 +248,7 @@
         function bAnimate() { bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height); backCubes.forEach(c => { c.update(); c.draw(); }); requestAnimationFrame(bAnimate); }
         bAnimate();
 
-        // --- 図鑑システム（ローカルストレージ連携） ---
+        // --- 図鑑システム ---
         const CUBE_TYPES = [
             { size: 25, color: "#E0FFFF", score: 2, expr: 1 }, 
             { size: 40, color: "#87CEEB", score: 4, expr: 0 },
@@ -268,10 +257,9 @@
             { size: 100, color: "#9370DB", score: 32, expr: 0 }, 
             { size: 130, color: "#32CD32", score: 64, expr: 0 },
             { size: 165, color: "#FF4500", score: 128, expr: 0 },
-            { size: 200, color: "#FF1493", score: 256, expr: 3 }
+            { size: 200, color: "#FF1493", score: 256, expr: 3 } 
         ];
 
-        // 初期化：保存データがあれば読み込み、無ければすべて未解放(false)
         let unlockedCubes = JSON.parse(localStorage.getItem('mascot_collection')) || Array(CUBE_TYPES.length).fill(false);
 
         function openCollection() {
@@ -288,56 +276,33 @@
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'collection-item';
                 
-                // キャンバスを生成（高解像度で描画してCSSで縮小）
                 const canvas = document.createElement('canvas');
                 canvas.className = 'collection-canvas';
-                canvas.width = 120; 
-                canvas.height = 120;
+                canvas.width = 120; canvas.height = 120;
                 const ctx = canvas.getContext('2d');
+                const size = 80; const x = 60; const y = 60;
                 
-                const size = 80;
-                const x = 60;
-                const y = 60;
-                
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.lineWidth = 4;
-                
+                ctx.save(); ctx.translate(x, y); ctx.lineWidth = 4;
                 if (isUnlocked) {
-                    // 解放済みの描画
-                    ctx.fillStyle = type.color; 
-                    ctx.strokeStyle = "#333"; 
-                    ctx.beginPath(); 
+                    ctx.fillStyle = type.color; ctx.strokeStyle = "#333"; ctx.beginPath(); 
                     let r = 15;
                     ctx.moveTo(-size/2 + r, -size/2); ctx.arcTo(size/2, -size/2, size/2, size/2, r);
                     ctx.arcTo(size/2, size/2, -size/2, size/2, r); ctx.arcTo(-size/2, size/2, -size/2, -size/2, r);
                     ctx.arcTo(-size/2, -size/2, size/2, -size/2, r); ctx.fill(); ctx.stroke();
                     drawFace(ctx, 0, 0, size, 0, type.expr);
                 } else {
-                    // 未解放（シルエットと？）
-                    ctx.fillStyle = "#e0e0e0"; 
-                    ctx.strokeStyle = "#aaa"; 
-                    ctx.beginPath(); 
+                    ctx.fillStyle = "#e0e0e0"; ctx.strokeStyle = "#aaa"; ctx.beginPath(); 
                     let r = 15;
                     ctx.moveTo(-size/2 + r, -size/2); ctx.arcTo(size/2, -size/2, size/2, size/2, r);
                     ctx.arcTo(size/2, size/2, -size/2, size/2, r); ctx.arcTo(-size/2, size/2, -size/2, -size/2, r);
                     ctx.arcTo(-size/2, -size/2, size/2, -size/2, r); ctx.fill(); ctx.stroke();
-                    
-                    ctx.fillStyle = "#aaa";
-                    ctx.font = "bold 50px Arial";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.fillText("?", 0, 5);
+                    ctx.fillStyle = "#aaa"; ctx.font = "bold 50px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("?", 0, 5);
                 }
                 ctx.restore();
-                
                 itemDiv.appendChild(canvas);
-                
-                // レベルテキスト
                 const label = document.createElement('span');
                 label.innerText = isUnlocked ? `Lv.${index + 1}` : "???";
                 itemDiv.appendChild(label);
-                
                 grid.appendChild(itemDiv);
             });
         }
@@ -346,10 +311,8 @@
         let engine, render, runner;
         let gameActive = false, currentCube = null, score = 0;
         let isGameInitialized = false; 
-        
         const gameWidth = 360, gameHeight = 500;
-        const DEAD_LINE_Y = 100; 
-        const SPAWN_Y = 30;      
+        const DEAD_LINE_Y = 100; const SPAWN_Y = 30;      
 
         function openGame() { 
             document.getElementById('gameModal').style.display = "flex"; 
@@ -376,7 +339,6 @@
                     const { bodyA, bodyB } = pair;
                     if (bodyA.label && bodyA.label === bodyB.label && bodyA.label.startsWith('c_')) {
                         const idx = parseInt(bodyA.label.split('_')[1]);
-                        
                         const midX = (bodyA.position.x + bodyB.position.x) / 2;
                         const midY = (bodyA.position.y + bodyB.position.y) / 2;
                         World.remove(engine.world, [bodyA, bodyB]);
@@ -459,7 +421,6 @@
             const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, { friction: 0.3, restitution: 0.1, label: 'c_' + index, isStatic: isStatic, render: { fillStyle: type.color, strokeStyle: '#333', lineWidth: 2 } });
             Matter.World.add(engine.world, cube); 
             
-            // ★図鑑のアンロック処理★
             if (!unlockedCubes[index]) {
                 unlockedCubes[index] = true;
                 localStorage.setItem('mascot_collection', JSON.stringify(unlockedCubes));
