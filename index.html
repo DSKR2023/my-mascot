@@ -2,155 +2,81 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Desktop Mascot - Official Site</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #87CEEB; /* 空色 */
-            --accent-color: #FFD700;  /* ゴールド */
-            --pink-color: #FFD1DC;    /* ピンク */
+            --primary-color: #87CEEB;
+            --accent-color: #FFD700;
+            --pink-color: #FFD1DC;
             --text-color: #333;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; touch-action: manipulation;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             background-color: #f8f9fa;
-            color: var(--text-color);
         }
 
-        /* 背景キャンバス */
-        #mascotCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            cursor: default;
-        }
+        #mascotCanvas { position: fixed; top: 0; left: 0; z-index: 1; }
 
-        /* メインUIレイヤー */
         .ui-layer {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            pointer-events: none; 
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; pointer-events: none;
         }
 
-        /* ロゴ：グラデーションデザイン */
-        .logo-title {
-            position: relative;
-            margin-bottom: 2rem;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-        }
-
+        .logo-title { margin-bottom: 2rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
         .logo-title h1 {
-            margin: 0;
-            padding: 0;
-            font-size: 3.5rem;
-            font-weight: 900;
+            margin: 0; font-size: 3.2rem; font-weight: 900;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--pink-color), var(--primary-color));
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientAnim 6s linear infinite;
-            -webkit-text-stroke: 1px white; 
-            paint-order: stroke fill;
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1px white;
         }
 
-        @keyframes gradientAnim {
-            to { background-position: 200% center; }
-        }
+        @keyframes gradientAnim { to { background-position: 200% center; } }
 
-        /* ボタンデザイン */
         .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            pointer-events: auto;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; pointer-events: auto;
         }
 
         .btn {
-            background: white;
-            border: 2.5px solid var(--primary-color);
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 0 var(--primary-color);
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            text-align: center;
-            line-height: 1.2;
+            background: white; border: 2.5px solid var(--primary-color);
+            padding: 12px 20px; border-radius: 12px; font-size: 0.95rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 var(--primary-color);
         }
+        .btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--primary-color); background: #f0faff; }
+        
+        .btn-game { border-color: #9370DB; box-shadow: 0 4px 0 #9370DB; color: #9370DB; grid-column: span 2; font-size: 1.1rem; }
+        .btn-game:hover { background: #f3efff; }
 
-        .btn:hover {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 var(--primary-color);
-            background: #f0faff;
-        }
-
-        .btn-download { 
-            border-color: #ff5a5f; 
-            box-shadow: 0 4px 0 #ff5a5f; 
-            color: white;
-            background: #ff5a5f;
-        }
-        .btn-download:hover { 
-            background: #ff7e82; 
-            box-shadow: 0 2px 0 #ff5a5f;
-        }
-
-        /* モーダル */
+        /* モーダル共通 */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
+            display: none; position: fixed; z-index: 100;
             left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
         }
-
         .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 40px;
-            border-radius: 20px;
-            width: 85%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            line-height: 1.8;
-            font-size: 0.95rem;
+            background: white; margin: 5vh auto; padding: 30px; border-radius: 20px;
+            width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto;
+            position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
+        .close-btn { position: absolute; right: 20px; top: 10px; font-size: 30px; cursor: pointer; color: #ccc; z-index: 101; }
 
-        .close-btn {
-            position: absolute; right: 20px; top: 10px;
-            font-size: 30px; cursor: pointer; color: #ccc;
+        /* ゲーム画面専用 */
+        #gameContainer {
+            width: 100%; height: 450px; background: #eee; border: 4px solid #333;
+            position: relative; overflow: hidden; touch-action: none;
         }
+        #gameCanvas { background: #fff; display: block; margin: 0 auto; }
+        .game-ui { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; }
+        .rule-btn { background: #eee; border: 1px solid #ccc; padding: 2px 10px; border-radius: 5px; cursor: pointer; }
 
-        h2 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; margin-bottom: 20px; font-size: 1.3rem; }
-
-        footer {
-            position: absolute; bottom: 15px; width: 100%;
-            text-align: center; z-index: 10; pointer-events: auto;
-            font-size: 0.8rem; font-weight: bold; color: #888;
-        }
-        footer a { color: var(--primary-color); text-decoration: none; border-bottom: 1px solid; }
+        footer { position: absolute; bottom: 15px; width: 100%; text-align: center; z-index: 10; font-size: 0.75rem; color: #888; pointer-events: auto; }
+        footer a { color: var(--primary-color); text-decoration: none; }
     </style>
 </head>
 <body>
@@ -158,216 +84,230 @@
     <canvas id="mascotCanvas"></canvas>
 
     <div class="ui-layer">
-        <div class="logo-title">
-            <h1>Desktop Mascot</h1>
-        </div>
-        
+        <div class="logo-title"><h1>Desktop Mascot</h1></div>
         <div class="button-grid">
-            <button class="btn btn-download" onclick="openModal('downloadModal')">📥 ダウンロード</button>
+            <button class="btn btn-game" onclick="openGame()">🎮 ゲーム広場（キューブ進化）</button>
             <button class="btn" onclick="openModal('howToUseModal')">📖 使用方法</button>
             <button class="btn" onclick="openModal('termsModal')">📜 利用規約</button>
-            <button class="btn" onclick="openModal('privacyModal')">🔒 プライバシー</button>
+            <button class="btn" onclick="openModal('privacyModal')">🔒 秘密保持</button>
+            <button class="btn" onclick="openModal('downloadModal')">📥 取得</button>
         </div>
     </div>
 
-    <footer>
-        made by Jumu Tinora(DSKR) | 
-        <a href="https://dskr-home.vercel.app/#home" target="_blank">サークル公式HP</a>
-    </footer>
+    <footer>made by Jumu Tinora(DSKR) | <a href="https://dskr-home.vercel.app/#home" target="_blank">サークル公式HP</a></footer>
 
-    <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('downloadModal')">&times;</span>
-            <h2>ダウンロード</h2>
-            <div class="modal-body">
-                <p>マスコット（Windows版）をダウンロードできます。</p>
-                <p style="color: #e63946; font-weight: bold;">※現在準備中です。BOOTHでの公開をお待ちください。</p>
-                <a href="#" target="_blank" style="display:inline-block; margin-top:10px; background:#ff5a5f; color:white; padding:12px 25px; border-radius:10px; text-decoration:none; font-weight:bold;">BOOTHをチェック</a>
+    <div id="gameModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; padding: 20px;">
+            <span class="close-btn" onclick="closeGame()">&times;</span>
+            <div class="game-ui">
+                <span>スコア: <span id="scoreVal">0</span></span>
+                <button class="rule-btn" onclick="alert('【ルール】\n同じ種類のキューブをぶつけて進化させよう！\n一番大きい王様キューブを目指してね。\n上の線を超えたらゲームオーバー！\n\n【操作】\nPC: 左右キー または A/Dキーで移動、クリックで落とす\nスマホ: タップした場所に落とす')">Rule</button>
             </div>
+            <div id="gameContainer">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+            <p style="font-size: 0.8rem; text-align: center; margin-top: 10px; color: #666;">※PCはキーボード、スマホはタップで操作！</p>
         </div>
     </div>
 
-    <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('howToUseModal')">&times;</span>
-            <h2>使用方法</h2>
-            <div class="modal-body">
-                <ul>
-                    <li><strong>起動:</strong> フォルダ内の「DesktopMascot.exe」を起動。</li>
-                    <li><strong>AI設定:</strong> 右クリックメニューから設定可能。</li>
-                    <li><strong>Google連携:</strong> カレンダー同期機能が使えます。</li>
-                    <li><strong>背景の遊び:</strong> キューブはクリックで元気に跳ね、ゆっくり降ります。ドラッグして運ぶことも可能です。</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><span class="close-btn" onclick="closeModal('howToUseModal')">&times;</span><h2>使用方法</h2><p>DesktopMascot.exeを起動して、デスクトップでAIマスコットと一緒に過ごしましょう。背景のキューブはドラッグで遊べます。</p></div></div>
+    <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><span class="close-btn" onclick="closeModal('termsModal')">&times;</span><h2>利用規約</h2><p>二次配布禁止。改造は自由ですが自作発言は控えてください。</p></div></div>
+    <div id="privacyModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><span class="close-btn" onclick="closeModal('privacyModal')">&times;</span><h2>プライバシー</h2><p>個人データはPC内のみに保存され、送信されることはありません。</p></div></div>
+    <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><span class="close-btn" onclick="closeModal('downloadModal')">&times;</span><h2>ダウンロード</h2><p>現在準備中です。BOOTHでの公開をお待ちください。</p></div></div>
 
-    <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
-            <h2>利用規約</h2>
-            <div class="modal-body">
-                <ul>
-                    <li><strong>二次配布の禁止:</strong> 個人情報保護のため、exeの配布は禁止です。</li>
-                    <li><strong>免責事項:</strong> 本ソフトによる損害には責任を負いません。</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div id="privacyModal" class="modal" onclick="closeModalOnOuter(event)">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
-            <h2>プライバシーポリシー</h2>
-            <div class="modal-body">
-                <p>取得したデータは利用者のPC内のみに保存され、外部へ送信されることはありません。</p>
-            </div>
-        </div>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
     <script>
+        // --- 基本UI制御 ---
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
-        function closeModalOnOuter(event) { if (event.target.className === "modal") { event.target.style.display = "none"; } }
-        window.addEventListener('keydown', (e) => { if (e.key === "Escape") { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); } });
+        function closeModalOnOuter(event) { if (event.target.className === "modal") event.target.style.display = "none"; }
+        window.addEventListener('keydown', (e) => { if (e.key === "Escape") document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); });
 
-        const canvas = document.getElementById('mascotCanvas');
-        const ctx = canvas.getContext('2d');
-        let cubes = [];
-        let draggedCube = null;
-        let mouseX = 0, mouseY = 0;
-        let lastMX = 0, lastMY = 0;
-        let isMouseDown = false;
-        let dragStartTime = 0;
-        let startMX = 0, startMY = 0;
-
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class MascotCube {
-            constructor() { this.init(); this.y = Math.random() * canvas.height; }
+        // --- 背景アニメーション（前回の内容を継承） ---
+        const bCanvas = document.getElementById('mascotCanvas');
+        const bCtx = bCanvas.getContext('2d');
+        let backCubes = [];
+        function bResize() { bCanvas.width = window.innerWidth; bCanvas.height = window.innerHeight; }
+        window.addEventListener('resize', bResize); bResize();
+        class BackCube {
+            constructor() { this.init(); this.y = Math.random() * bCanvas.height; }
             init() {
-                this.size = 45 + Math.random() * 40;
-                this.x = Math.random() * canvas.width;
-                this.y = -this.size - (Math.random() * 700); 
-                
-                this.speedY = 0.05 + Math.random() * 0.1; 
-                this.speedX = (Math.random() - 0.5) * 0.2; 
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = (Math.random() - 0.5) * 0.002; 
-                
-                this.color = ["#87CEEB", "#FFD700", "#FFD1DC", "#E0FFFF"][Math.floor(Math.random() * 4)];
-                this.expr = Math.floor(Math.random() * 4);
-                this.timer = 300 + Math.random() * 500; 
-                this.isDragging = false;
+                this.size = 40 + Math.random() * 40; this.x = Math.random() * bCanvas.width; this.y = -100;
+                this.speedY = 0.05 + Math.random() * 0.1; this.rotation = Math.random() * 6; this.rotSpeed = (Math.random()-0.5)*0.002;
+                this.color = ["#87CEEB", "#FFD700", "#FFD1DC", "#E0FFFF"][Math.floor(Math.random()*4)];
             }
-            update() {
-                if (this.isDragging) {
-                    this.x += (mouseX - this.x) * 0.15;
-                    this.y += (mouseY - this.y) * 0.15;
-                    this.speedX = (mouseX - lastMX) * 0.5;
-                    this.speedY = (mouseY - lastMY) * 0.5;
-                } else {
-                    this.y += this.speedY;
-                    this.x += this.speedX;
-                    this.rotation += this.rotSpeed;
-
-                    // ★ 物理挙動の調整
-                    if (this.speedY < 0) {
-                        // 上昇中（ジャンプ時）は少し早く減速して頂点へ
-                        this.speedY += 0.3; 
-                    } else {
-                        // 落下中は超スロー重力
-                        this.speedY += 0.01; 
-                        // 落下速度にリミッターをかけて、酔わない遅さを維持
-                        if (this.speedY > 0.8) this.speedY = 0.8;
-                    }
-
-                    this.timer--;
-                    if (this.timer <= 0) { 
-                        this.expr = Math.floor(Math.random() * 4); 
-                        this.timer = 300 + Math.random() * 500; 
-                    }
-                    if (this.y > canvas.height + this.size) this.init();
-                    if (this.x < this.size/2 || this.x > canvas.width - this.size/2) {
-                        this.speedX *= -0.3;
-                        this.x = Math.max(this.size/2, Math.min(canvas.width - this.size/2, this.x));
-                    }
-                }
-            }
+            update() { this.y += this.speedY; this.rotation += this.rotSpeed; if (this.y > bCanvas.height + 50) this.init(); }
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
-                if (this.isDragging) { ctx.shadowBlur = 10; ctx.shadowColor = "rgba(0,0,0,0.1)"; ctx.scale(1.03, 1.03); }
-                ctx.fillStyle = this.color; ctx.strokeStyle = "#333"; ctx.lineWidth = 1.2;
-                ctx.beginPath(); ctx.roundRect(-this.size/2, -this.size/2, this.size, this.size, 8); ctx.fill(); ctx.stroke();
-                const eyeR = this.size * 0.08, eyeX = this.size * 0.2, eyeY = -this.size * 0.1;
-                ctx.fillStyle = "#333"; ctx.strokeStyle = "#333";
-                if (this.expr === 1) { 
-                    ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
-                    ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
-                } else if (this.expr === 2) { 
-                    ctx.fillRect(-eyeX - eyeR, eyeY, eyeR*2, 1); ctx.fillRect(eyeX - eyeR, eyeY, eyeR*2, 1);
-                    ctx.beginPath(); ctx.arc(0, this.size*0.2, eyeR, Math.PI, 0); ctx.stroke();
-                } else if (this.expr === 3 || this.isDragging) { 
-                    ctx.font = `bold ${this.size*0.25}px Arial`; ctx.fillText("@", -eyeX - eyeR, eyeY + eyeR); ctx.fillText("@", eyeX - eyeR, eyeY + eyeR);
-                } else { 
-                    ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(0, this.size*0.1, eyeR, 0, Math.PI); ctx.stroke();
+                bCtx.save(); bCtx.translate(this.x, this.y); bCtx.rotate(this.rotation);
+                bCtx.fillStyle = this.color; bCtx.strokeStyle = "#333"; bCtx.beginPath();
+                bCtx.roundRect(-this.size/2, -this.size/2, this.size, this.size, 5); bCtx.fill(); bCtx.stroke(); bCtx.restore();
+            }
+        }
+        for(let i=0; i<15; i++) backCubes.push(new BackCube());
+        function bAnimate() { bCtx.clearRect(0,0,bCanvas.width,bCanvas.height); backCubes.forEach(c => {c.update(); c.draw();}); requestAnimationFrame(bAnimate); }
+        bAnimate();
+
+        // --- キューブ進化ゲーム (Suika Game Style) ---
+        let engine, render, runner;
+        let gameActive = false;
+        let currentCube = null;
+        let score = 0;
+        const gameWidth = 320;
+        const gameHeight = 450;
+        
+        // 進化データ（7種類）
+        const CUBE_TYPES = [
+            { size: 15, color: "#E0FFFF", label: "眠", expr: 1, score: 2 },
+            { size: 25, color: "#87CEEB", label: "普", expr: 0, score: 4 },
+            { size: 35, color: "#FFD1DC", label: "照", expr: 2, score: 8 },
+            { size: 45, color: "#FFD700", label: "驚", expr: 3, score: 16 },
+            { size: 60, color: "#9370DB", label: "凛", expr: 0, score: 32 },
+            { size: 80, color: "#32CD32", label: "幸", expr: 0, score: 64 },
+            { size: 100, color: "#FF4500", label: "王", expr: 0, score: 128 }
+        ];
+
+        function openGame() {
+            document.getElementById('gameModal').style.display = "block";
+            if (!engine) initGame();
+            gameActive = true;
+            score = 0;
+            updateScore(0);
+        }
+
+        function closeGame() {
+            document.getElementById('gameModal').style.display = "none";
+            gameActive = false;
+        }
+
+        function initGame() {
+            const { Engine, Render, Runner, World, Bodies, Events } = Matter;
+            engine = Engine.create();
+            const container = document.getElementById('gameContainer');
+            const canvas = document.getElementById('gameCanvas');
+            
+            render = Render.create({
+                element: container,
+                engine: engine,
+                canvas: canvas,
+                options: {
+                    width: gameWidth,
+                    height: gameHeight,
+                    wireframes: false,
+                    background: '#ffffff'
                 }
-                ctx.restore();
-            }
-            isHit(mx, my) {
-                const pad = 10;
-                return mx > this.x - this.size/2 - pad && mx < this.x + this.size/2 + pad &&
-                       my > this.y - this.size/2 - pad && my < this.y + this.size/2 + pad;
-            }
-            bounce() {
-                // ★ ジャンプ速度を元気に（速い設定）
-                this.speedY = -12 - Math.random() * 5; 
-                this.speedX = (Math.random() - 0.5) * 10;
-                this.expr = 3;
-            }
+            });
+
+            // 壁の作成
+            const wallOptions = { isStatic: true, render: { fillStyle: '#333' } };
+            World.add(engine.world, [
+                Bodies.rectangle(gameWidth/2, gameHeight + 10, gameWidth, 20, wallOptions), // 床
+                Bodies.rectangle(-10, gameHeight/2, 20, gameHeight, wallOptions), // 左
+                Bodies.rectangle(gameWidth + 10, gameHeight/2, 20, gameHeight, wallOptions) // 右
+            ]);
+
+            Render.run(render);
+            runner = Runner.create();
+            Runner.run(runner, engine);
+
+            // 合体判定
+            Events.on(engine, 'collisionStart', (event) => {
+                event.pairs.forEach((pair) => {
+                    const { bodyA, bodyB } = pair;
+                    if (bodyA.label === bodyB.label && bodyA.label.startsWith('cube_')) {
+                        const typeIndex = parseInt(bodyA.label.split('_')[1]);
+                        if (typeIndex < CUBE_TYPES.length - 1) {
+                            const newX = (bodyA.position.x + bodyB.position.x) / 2;
+                            const newY = (bodyA.position.y + bodyB.position.y) / 2;
+                            
+                            World.remove(engine.world, [bodyA, bodyB]);
+                            spawnCube(newX, newY, typeIndex + 1, false);
+                            updateScore(CUBE_TYPES[typeIndex+1].score);
+                        }
+                    }
+                });
+            });
+
+            // ゲームオーバー判定
+            Events.on(engine, 'afterUpdate', () => {
+                if (!gameActive) return;
+                engine.world.bodies.forEach(body => {
+                    if (!body.isStatic && body.position.y < 50 && body !== currentCube) {
+                        gameActive = false;
+                        alert("ゲームオーバー！ スコア: " + score);
+                        resetGame();
+                    }
+                });
+            });
+
+            createNextCube();
+
+            // 操作イベント
+            container.addEventListener('click', (e) => { if(gameActive) dropCube(); });
+            window.addEventListener('keydown', (e) => {
+                if (!gameActive || !currentCube) return;
+                if (e.key === 'ArrowLeft' || e.key === 'a') moveCurrent(-15);
+                if (e.key === 'ArrowRight' || e.key === 'd') moveCurrent(15);
+                if (e.key === ' ') dropCube();
+            });
+            // スマホタップ操作用
+            container.addEventListener('touchstart', (e) => {
+                if(!gameActive) return;
+                const rect = container.getBoundingClientRect();
+                const touchX = e.touches[0].clientX - rect.left;
+                Matter.Body.setPosition(currentCube, { x: Math.max(20, Math.min(gameWidth-20, touchX)), y: 30 });
+                dropCube();
+            });
         }
 
-        // キューブの数は20個
-        for (let i = 0; i < 20; i++) cubes.push(new MascotCube());
-
-        canvas.addEventListener('mousedown', e => {
-            const rect = canvas.getBoundingClientRect();
-            startMX = e.clientX - rect.left; startMY = e.clientY - rect.top;
-            isMouseDown = true; dragStartTime = Date.now();
-            for (let i = cubes.length - 1; i >= 0; i--) { if (cubes[i].isHit(startMX, startMY)) { draggedCube = cubes[i]; break; } }
-        });
-
-        window.addEventListener('mousemove', e => {
-            const rect = canvas.getBoundingClientRect();
-            lastMX = mouseX; lastMY = mouseY;
-            mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
-            if (draggedCube && isMouseDown) {
-                if (Math.hypot(mouseX - startMX, mouseY - startMY) > 5) { draggedCube.isDragging = true; canvas.style.cursor = "grabbing"; }
-            } else {
-                let h = false; cubes.forEach(c => { if(c.isHit(mouseX, mouseY)) h = true; });
-                canvas.style.cursor = h ? "grab" : "default";
-            }
-        });
-
-        window.addEventListener('mouseup', () => {
-            if (draggedCube) {
-                if (!draggedCube.isDragging || (Date.now() - dragStartTime < 250)) { draggedCube.bounce(); }
-                draggedCube.isDragging = false; draggedCube = null;
-            }
-            isMouseDown = false; canvas.style.cursor = "default";
-        });
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            cubes.forEach(c => { c.update(); c.draw(); });
-            requestAnimationFrame(animate);
+        function createNextCube() {
+            if (!gameActive) return;
+            const typeIndex = Math.floor(Math.random() * 3); // 最初は小さいの3種から
+            currentCube = spawnCube(gameWidth/2, 30, typeIndex, true);
         }
-        animate();
+
+        function spawnCube(x, y, index, isStatic) {
+            const type = CUBE_TYPES[index];
+            const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, {
+                friction: 0.5,
+                restitution: 0.2,
+                label: 'cube_' + index,
+                isStatic: isStatic,
+                render: {
+                    fillStyle: type.color,
+                    strokeStyle: '#333',
+                    lineWidth: 2
+                }
+            });
+            Matter.World.add(engine.world, cube);
+            return cube;
+        }
+
+        function moveCurrent(dx) {
+            const newX = Math.max(20, Math.min(gameWidth - 20, currentCube.position.x + dx));
+            Matter.Body.setPosition(currentCube, { x: newX, y: 30 });
+        }
+
+        function dropCube() {
+            if (!currentCube || !currentCube.isStatic) return;
+            Matter.Body.setStatic(currentCube, false);
+            const dropped = currentCube;
+            currentCube = null;
+            setTimeout(() => { if(gameActive) createNextCube(); }, 800);
+        }
+
+        function updateScore(points) {
+            score += points;
+            document.getElementById('scoreVal').innerText = score;
+        }
+
+        function resetGame() {
+            Matter.World.clear(engine.world, true);
+            score = 0;
+            updateScore(0);
+            createNextCube();
+            gameActive = true;
+        }
     </script>
 </body>
 </html>
