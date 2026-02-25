@@ -19,7 +19,6 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            /* 滲み防止・クッキリ描画 */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
@@ -48,7 +47,7 @@
             pointer-events: none; 
         }
 
-        /* ロゴ：グラデーションと適度な影 */
+        /* ロゴ：グラデーションデザイン */
         .logo-title {
             position: relative;
             margin-bottom: 2rem;
@@ -58,13 +57,13 @@
         .logo-title h1 {
             margin: 0;
             padding: 0;
-            font-size: 3.5rem; /* サイズをさらに微調整 */
+            font-size: 3.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--pink-color), var(--primary-color));
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientAnim 6s linear infinite; /* アニメーションもゆっくり */
+            animation: gradientAnim 6s linear infinite;
             -webkit-text-stroke: 1px white; 
             paint-order: stroke fill;
         }
@@ -73,7 +72,7 @@
             to { background-position: 200% center; }
         }
 
-        /* ボタン：文字が滲まないクッキリ設定 */
+        /* ボタンデザイン */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -114,7 +113,7 @@
             box-shadow: 0 2px 0 #ff5a5f;
         }
 
-        /* ポップアップ（モーダル） */
+        /* モーダル */
         .modal {
             display: none;
             position: fixed;
@@ -145,7 +144,6 @@
         }
 
         h2 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; margin-bottom: 20px; font-size: 1.3rem; }
-        .modal-body ul { padding-left: 15px; margin: 0; }
 
         footer {
             position: absolute; bottom: 15px; width: 100%;
@@ -195,11 +193,10 @@
             <h2>使用方法</h2>
             <div class="modal-body">
                 <ul>
-                    <li><strong>起動:</strong> 「DesktopMascot.exe」を起動。</li>
-                    <li><strong>AI設定:</strong> 右クリックメニューからプロバイダーを選択。</li>
-                    <li><strong>Google連携:</strong> スケジュールの同期が可能です。</li>
-                    <li><strong>お世話:</strong> 撫でたり、話しかけたりして育ててください。</li>
-                    <li><strong>背景の遊び:</strong> 落ちてくるキューブは、ゆっくりクリックで跳ねたりドラッグで運んだりできます。</li>
+                    <li><strong>起動:</strong> フォルダ内の「DesktopMascot.exe」を起動。</li>
+                    <li><strong>AI設定:</strong> 右クリックメニューから設定可能。</li>
+                    <li><strong>Google連携:</strong> カレンダー同期機能が使えます。</li>
+                    <li><strong>背景の遊び:</strong> キューブはクリックで元気に跳ね、ゆっくり降ります。ドラッグして運ぶことも可能です。</li>
                 </ul>
             </div>
         </div>
@@ -212,7 +209,6 @@
             <div class="modal-body">
                 <ul>
                     <li><strong>二次配布の禁止:</strong> 個人情報保護のため、exeの配布は禁止です。</li>
-                    <li><strong>改造の制限:</strong> 改造は自由ですが、自作発言は禁止です。</li>
                     <li><strong>免責事項:</strong> 本ソフトによる損害には責任を負いません。</li>
                 </ul>
             </div>
@@ -224,7 +220,7 @@
             <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
             <h2>プライバシーポリシー</h2>
             <div class="modal-body">
-                <p><strong>個人データ:</strong> 取得したデータは利用者のPC内のみに保存され、外部へ送信されることはありません。</p>
+                <p>取得したデータは利用者のPC内のみに保存され、外部へ送信されることはありません。</p>
             </div>
         </div>
     </div>
@@ -235,7 +231,6 @@
         function closeModalOnOuter(event) { if (event.target.className === "modal") { event.target.style.display = "none"; } }
         window.addEventListener('keydown', (e) => { if (e.key === "Escape") { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); } });
 
-        // --- 超スロー・インタラクティブ・アニメーション ---
         const canvas = document.getElementById('mascotCanvas');
         const ctx = canvas.getContext('2d');
         let cubes = [];
@@ -253,17 +248,13 @@
         class MascotCube {
             constructor() { this.init(); this.y = Math.random() * canvas.height; }
             init() {
-                // 子どもがクリックしやすいよう最小サイズをアップ
                 this.size = 45 + Math.random() * 40;
                 this.x = Math.random() * canvas.width;
-                this.y = -this.size - (Math.random() * 500); 
+                this.y = -this.size - (Math.random() * 700); 
                 
-                // ★ 落下速度を劇的に遅く (0.05〜0.1)
                 this.speedY = 0.05 + Math.random() * 0.1; 
                 this.speedX = (Math.random() - 0.5) * 0.2; 
                 this.rotation = Math.random() * Math.PI * 2;
-                
-                // ★ 回転を劇的に遅く (0.002)
                 this.rotSpeed = (Math.random() - 0.5) * 0.002; 
                 
                 this.color = ["#87CEEB", "#FFD700", "#FFD1DC", "#E0FFFF"][Math.floor(Math.random() * 4)];
@@ -273,7 +264,6 @@
             }
             update() {
                 if (this.isDragging) {
-                    // ドラッグ中はゆっくり追従
                     this.x += (mouseX - this.x) * 0.15;
                     this.y += (mouseY - this.y) * 0.15;
                     this.speedX = (mouseX - lastMX) * 0.5;
@@ -282,22 +272,28 @@
                     this.y += this.speedY;
                     this.x += this.speedX;
                     this.rotation += this.rotSpeed;
-                    
-                    // ★ 重力を極小に設定 (0.01)
-                    this.speedY += 0.01; 
-                    
+
+                    // ★ 物理挙動の調整
+                    if (this.speedY < 0) {
+                        // 上昇中（ジャンプ時）は少し早く減速して頂点へ
+                        this.speedY += 0.3; 
+                    } else {
+                        // 落下中は超スロー重力
+                        this.speedY += 0.01; 
+                        // 落下速度にリミッターをかけて、酔わない遅さを維持
+                        if (this.speedY > 0.8) this.speedY = 0.8;
+                    }
+
                     this.timer--;
                     if (this.timer <= 0) { 
                         this.expr = Math.floor(Math.random() * 4); 
                         this.timer = 300 + Math.random() * 500; 
                     }
-                    
                     if (this.y > canvas.height + this.size) this.init();
                     if (this.x < this.size/2 || this.x > canvas.width - this.size/2) {
-                        this.speedX *= -0.3; // 跳ね返りも優しく
+                        this.speedX *= -0.3;
                         this.x = Math.max(this.size/2, Math.min(canvas.width - this.size/2, this.x));
                     }
-                    if (this.y < -1500) this.init();
                 }
             }
             draw() {
@@ -324,20 +320,20 @@
                 ctx.restore();
             }
             isHit(mx, my) {
-                const pad = 10; // クリック判定を少し広げる
+                const pad = 10;
                 return mx > this.x - this.size/2 - pad && mx < this.x + this.size/2 + pad &&
                        my > this.y - this.size/2 - pad && my < this.y + this.size/2 + pad;
             }
             bounce() {
-                // ★ 跳ねる高さも穏やかに
-                this.speedY = -5 - Math.random() * 2; 
-                this.speedX = (Math.random() - 0.5) * 4;
+                // ★ ジャンプ速度を元気に（速い設定）
+                this.speedY = -12 - Math.random() * 5; 
+                this.speedX = (Math.random() - 0.5) * 10;
                 this.expr = 3;
             }
         }
 
-        // 数も少し減らして（8個）スッキリと
-        for (let i = 0; i < 8; i++) cubes.push(new MascotCube());
+        // キューブの数は20個
+        for (let i = 0; i < 20; i++) cubes.push(new MascotCube());
 
         canvas.addEventListener('mousedown', e => {
             const rect = canvas.getBoundingClientRect();
