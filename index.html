@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop Mascot - Official Site</title>
+    <style>
+        :root {
+            --primary-color: #87CEEB; /* 空色 */
+            --accent-color: #FFD700;  /* ゴールド */
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #333;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-color);
+        }
+
+        /* 背景キャンバス */
+        #mascotCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* メインコンテンツレイヤー */
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            pointer-events: none; /* 背景のクリックを邪魔しない */
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ボタンデザイン */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+        }
+
+        .btn {
+            background: white;
+            border: 3px solid var(--primary-color);
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ポップアップ（モーダル） */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 8% auto;
+            padding: 40px;
+            border-radius: 25px;
+            width: 85%;
+            max-width: 650px;
+            max-height: 75vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            line-height: 1.8;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 25px;
+            top: 15px;
+            font-size: 35px;
+            font-weight: bold;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .close-btn:hover { color: #333; }
+
+        h2 { color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .modal-body ul { padding-left: 20px; }
+        .modal-body li { margin-bottom: 10px; }
+
+        /* フッター */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 5px 0;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="mascotCanvas"></canvas>
+
+    <div class="ui-layer">
+        <h1>Desktop Mascot</h1>
+        <div class="button-group">
+            <button class="btn" onclick="openModal('downloadModal')">ダウンロード</button>
+            <button class="btn" onclick="openModal('howToUseModal')">使用方法</button>
+            <button class="btn" onclick="openModal('termsModal')">利用規約</button>
+        </div>
+    </div>
+
+    <footer>
+        made by Jumu Tinora(DSKR) | 
+        <a href="https://dskr-home.vercel.app/#home" target="_blank">サークルホームページ</a>
+    </footer>
+
+    <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('downloadModal')">&times;</span>
+            <h2>ダウンロード</h2>
+            <div class="modal-body">
+                <p>デスクトップマスコット本体のダウンロードはこちらから。</p>
+                <p style="color: #666; font-size: 0.9rem;">※現在は準備中です。BOOTHでの公開をお待ちください。</p>
+                <a href="#" style="display:inline-block; margin-top:20px; background:#ff5a5f; color:white; padding:15px 30px; border-radius:10px; text-decoration:none; font-weight:bold;">BOOTHで入手する（Coming Soon）</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('howToUseModal')">&times;</span>
+            <h2>使用方法</h2>
+            <div class="modal-body">
+                <ul>
+                    <li><strong>起動:</strong> フォルダ内の「DesktopMascot.exe」を実行してください。</li>
+                    <li><strong>AI設定:</strong> 右クリックメニューからGeminiやClaudeのAPIキーを登録するか、ローカルAI（LM Studio）と連携させて会話が楽しめます。</li>
+                    <li><strong>お世話:</strong> マウスで撫でてあげてください。放置するといじけることもあります。</li>
+                    <li><strong>睡眠:</strong> 深夜や昼間は勝手に寝てしまうことがありますが、クリックで起こせます。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
+            <h2>利用規約</h2>
+            <div class="modal-body">
+                <ul>
+                    <li><strong>二次配布の禁止:</strong> 個人情報流出防止のため、exeファイル化したデータの第三者への譲渡・配布は固く禁じます。</li>
+                    <li><strong>改造について:</strong> 開発キットの改造は可能ですが、「1から自作した」と偽る行為は禁止です。</li>
+                    <li><strong>免責事項:</strong> 本ソフトの使用によって生じた損害について、製作者は一切の責任を負いません。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- モーダル制御ロジック ---
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+        // 画面外クリックで閉じる
+        function closeModalOnOuter(event) {
+            if (event.target.className === "modal") { event.target.style.display = "none"; }
+        }
+
+        // ESCキーで閉じる
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
+            }
+        });
+
+        // --- 背景キューブアニメーション ---
+        const canvas = document.getElementById('mascotCanvas');
+        const ctx = canvas.getContext('2d');
+        let cubes = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class MascotCube {
+            constructor() {
+                this.init();
+                this.y = Math.random() * canvas.height;
+            }
+
+            init() {
+                this.size = 40 + Math.random() * 50;
+                this.x = Math.random() * canvas.width;
+                this.y = -this.size - (Math.random() * 200);
+                this.speedY = 1 + Math.random() * 2;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.04;
+                this.color = ["#87CEEB", "#FFD700", "#FFD1DC", "#E0FFFF"][Math.floor(Math.random() * 4)];
+                this.expression = Math.floor(Math.random() * 4); // 0:通常 1:睡眠 2:いじけ 3:回転
+                this.exprTimer = 100 + Math.random() * 200;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+                this.exprTimer--;
+
+                if (this.exprTimer <= 0) {
+                    this.expression = Math.floor(Math.random() * 4);
+                    this.exprTimer = 100 + Math.random() * 200;
+                }
+
+                if (this.y > canvas.height + this.size) this.init();
+                if (this.x < -this.size || this.x > canvas.width + this.size) this.speedX *= -1;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                // キューブ本体
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = "#333";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(-this.size/2, -this.size/2, this.size, this.size, 8);
+                ctx.fill();
+                ctx.stroke();
+
+                // 顔の描画
+                const eyeR = this.size * 0.08;
+                const eyeX = this.size * 0.2;
+                const eyeY = -this.size * 0.1;
+                ctx.fillStyle = "#333";
+                ctx.strokeStyle = "#333";
+
+                if (this.expression === 1) { // 睡眠
+                    ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI); ctx.stroke();
+                    ctx.font = `${this.size*0.3}px Arial`;
+                    ctx.fillText("zZ", this.size*0.3, -this.size*0.3);
+                } else if (this.expression === 2) { // いじけ (ジト目)
+                    ctx.fillRect(-eyeX - eyeR, eyeY, eyeR*2, 2);
+                    ctx.fillRect(eyeX - eyeR, eyeY, eyeR*2, 2);
+                    ctx.beginPath(); ctx.arc(0, this.size*0.2, eyeR, Math.PI, 0); ctx.stroke();
+                } else if (this.expression === 3) { // 目が回る
+                    ctx.font = `${this.size*0.3}px Arial`;
+                    ctx.fillText("@", -eyeX - eyeR, eyeY + eyeR);
+                    ctx.fillText("@", eyeX - eyeR, eyeY + eyeR);
+                } else { // 通常
+                    ctx.beginPath(); ctx.arc(-eyeX, eyeY, eyeR, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(eyeX, eyeY, eyeR, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(0, this.size*0.1, eyeR, 0, Math.PI); ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 15; i++) cubes.push(new MascotCube());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            cubes.forEach(c => { c.update(); c.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
