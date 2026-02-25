@@ -21,7 +21,8 @@
             background-color: #f8f9fa;
         }
 
-        #mascotCanvas { position: fixed; top: 0; left: 0; z-index: 1; }
+        /* 背景キャンバス */
+        #mascotCanvas { position: fixed; top: 0; left: 0; z-index: 1; cursor: default; }
 
         .ui-layer {
             position: relative; z-index: 10;
@@ -34,7 +35,7 @@
             margin: 0; font-size: 3.5rem; font-weight: 900;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--pink-color), var(--primary-color));
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1px white;
+            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1.5px white;
             paint-order: stroke fill;
         }
 
@@ -62,7 +63,7 @@
             background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
         }
         .modal-content {
-            background: white; margin: 2vh auto; padding: 20px; border-radius: 25px;
+            background: white; margin: 2vh auto; padding: 25px; border-radius: 25px;
             width: 90%; max-width: 440px; max-height: 95vh; overflow-y: auto;
             position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
@@ -74,20 +75,14 @@
         }
         #gameCanvas { display: block; }
         
-        .game-ui { 
-            display: flex; align-items: center; justify-content: space-between; 
-            margin-bottom: 10px; padding: 0 5px;
-        }
-        .score-box { font-size: 1.2rem; font-weight: 900; color: #333; flex-grow: 1; text-align: right; margin-right: 10px; }
-        .rule-btn { 
-            background: #f0f0f0; border: 2px solid #ddd; padding: 4px 12px; 
-            border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit;
-        }
+        .game-ui { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .score-box { font-size: 1.2rem; font-weight: 900; color: #333; }
+        .rule-btn { background: #f0f0f0; border: 2px solid #ddd; padding: 4px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; }
 
-        /* ★閉じるボタンの透過デザイン★ */
+        /* 透過した閉じるボタン */
         .game-close-btn {
             display: block; width: fit-content; margin: 15px auto 0;
-            background: transparent; border: none; color: #888;
+            background: transparent; border: none; color: #aaa;
             font-size: 1.1rem; font-weight: bold; cursor: pointer;
             transition: 0.3s; pointer-events: auto;
         }
@@ -125,15 +120,12 @@
                 <canvas id="gameCanvas"></canvas>
             </div>
             <button class="game-close-btn" onclick="closeGame()">＞ 閉じる ＜</button>
-            <p style="font-size: 0.8rem; text-align: center; margin-top: 8px; color: #777;">
-                [A][D]キーで移動 / クリック・タップで落下
-            </p>
         </div>
     </div>
 
-    <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>使用方法</h2><p>DesktopMascot.exeを起動してください。背景のキューブはゆっくり漂い、ドラッグやクリックで遊べます。</p><button class="game-close-btn" onclick="closeModal('howToUseModal')">＞ 閉じる ＜</button></div></div>
-    <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>利用規約</h2><p>二次配布禁止。改造は可能ですが、自作発言は禁止です。</p><button class="game-close-btn" onclick="closeModal('termsModal')">＞ 閉じる ＜</button></div></div>
-    <div id="privacyModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>プライバシー</h2><p>取得データはローカル保存のみで、外部送信は行いません。</p><button class="game-close-btn" onclick="closeModal('privacyModal')">＞ 閉じる ＜</button></div></div>
+    <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>使用方法</h2><ul><li>DesktopMascot.exeを起動。</li><li>背景の子はドラッグやクリックで遊べます。</li></ul><button class="game-close-btn" onclick="closeModal('howToUseModal')">＞ 閉じる ＜</button></div></div>
+    <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>利用規約</h2><p>二次配布禁止。改造は可能ですが自作発言は禁止です。</p><button class="game-close-btn" onclick="closeModal('termsModal')">＞ 閉じる ＜</button></div></div>
+    <div id="privacyModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>プライバシー</h2><p>データはローカル保存のみで外部送信は行いません。</p><button class="game-close-btn" onclick="closeModal('privacyModal')">＞ 閉じる ＜</button></div></div>
     <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>ダウンロード</h2><p>現在準備中です。BOOTHでの公開をお待ちください。</p><button class="game-close-btn" onclick="closeModal('downloadModal')">＞ 閉じる ＜</button></div></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
@@ -143,151 +135,161 @@
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function closeModalOnOuter(event) { if (event.target.className === "modal") event.target.style.display = "none"; }
-        function showRules() { alert('【ルール】\n同じ種類のキューブをくっつけると進化！\n最後の「王様キューブ」を目指そう。\n赤い点線を超えたらゲームオーバー！'); }
+        function showRules() { alert('同じ種類をくっつけて進化させよう！\n赤い点線を超えたらゲームオーバー。'); }
+        window.addEventListener('keydown', (e) => { if (e.key === "Escape") document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); });
 
-        // 背景アニメーション
+        // --- 背景アニメーション (20個・顔あり・クリック跳ね・ドラッグ対応) ---
         const bCanvas = document.getElementById('mascotCanvas');
         const bCtx = bCanvas.getContext('2d');
-        let backCubes = [];
+        let cubes = [];
+        let draggedCube = null;
+        let mouseX = 0, mouseY = 0, lastMX = 0, lastMY = 0;
+        let isMouseDown = false, dragStartTime = 0, startMX = 0, startMY = 0;
+
         function bResize() { bCanvas.width = window.innerWidth; bCanvas.height = window.innerHeight; }
         window.addEventListener('resize', bResize); bResize();
-        class BackCube {
+
+        class MascotCube {
             constructor() { this.init(); this.y = Math.random() * bCanvas.height; }
             init() {
-                this.size = 40 + Math.random() * 40; this.x = Math.random() * bCanvas.width; this.y = -200;
-                this.speedY = 0.05 + Math.random() * 0.1; this.rotation = Math.random() * 6; this.rotSpeed = (Math.random()-0.5)*0.002;
-                this.color = ["#87CEEB", "#FFD700", "#FFD1DC", "#E0FFFF"][Math.floor(Math.random()*4)];
+                this.size = 45 + Math.random() * 40;
+                this.x = Math.random() * bCanvas.width;
+                this.y = -this.size - (Math.random() * 700);
+                this.speedY = 0.05 + Math.random() * 0.1; 
+                this.speedX = (Math.random() - 0.5) * 0.2; 
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.002; 
+                this.color = ["#87CEEB", "#FFD700", "#FFD1DC", "#E0FFFF"][Math.floor(Math.random() * 4)];
+                this.expr = Math.floor(Math.random() * 4);
+                this.timer = 300 + Math.random() * 500;
+                this.isDragging = false;
             }
-            update() { this.y += this.speedY; this.rotation += this.rotSpeed; if (this.y > bCanvas.height + 100) this.init(); }
+            update() {
+                if (this.isDragging) {
+                    this.x += (mouseX - this.x) * 0.15;
+                    this.y += (mouseY - this.y) * 0.15;
+                    this.speedX = (mouseX - lastMX) * 0.5;
+                    this.speedY = (mouseY - lastMY) * 0.5;
+                } else {
+                    this.y += this.speedY; this.x += this.speedX; this.rotation += this.rotSpeed;
+                    if (this.speedY < 0) this.speedY += 0.3; else { this.speedY += 0.01; if (this.speedY > 0.8) this.speedY = 0.8; }
+                    this.timer--;
+                    if (this.timer <= 0) { this.expr = Math.floor(Math.random() * 4); this.timer = 300 + Math.random() * 500; }
+                    if (this.y > bCanvas.height + this.size) this.init();
+                    if (this.x < this.size/2 || this.x > bCanvas.width - this.size/2) { this.speedX *= -0.3; this.x = Math.max(this.size/2, Math.min(bCanvas.width - this.size/2, this.x)); }
+                }
+            }
             draw() {
                 bCtx.save(); bCtx.translate(this.x, this.y); bCtx.rotate(this.rotation);
+                if (this.isDragging) { bCtx.shadowBlur = 10; bCtx.shadowColor = "rgba(0,0,0,0.1)"; bCtx.scale(1.05, 1.05); }
                 bCtx.fillStyle = this.color; bCtx.strokeStyle = "#333"; bCtx.lineWidth = 1.2;
-                bCtx.beginPath(); bCtx.roundRect(-this.size/2, -this.size/2, this.size, this.size, 6); bCtx.fill(); bCtx.stroke(); bCtx.restore();
+                bCtx.beginPath(); bCtx.roundRect(-this.size/2, -this.size/2, this.size, this.size, 8); bCtx.fill(); bCtx.stroke();
+                const eyeR = this.size * 0.08, eyeX = this.size * 0.2, eyeY = -this.size * 0.1;
+                bCtx.fillStyle = "#333"; bCtx.strokeStyle = "#333";
+                if (this.expr === 1) { // 睡眠
+                    bCtx.beginPath(); bCtx.arc(-eyeX, eyeY, eyeR, 0, Math.PI); bCtx.stroke();
+                    bCtx.beginPath(); bCtx.arc(eyeX, eyeY, eyeR, 0, Math.PI); bCtx.stroke();
+                } else if (this.expr === 2) { // いじけ
+                    bCtx.fillRect(-eyeX - eyeR, eyeY, eyeR*2, 1); bCtx.fillRect(eyeX - eyeR, eyeY, eyeR*2, 1);
+                    bCtx.beginPath(); bCtx.arc(0, this.size*0.2, eyeR, Math.PI, 0); bCtx.stroke();
+                } else if (this.expr === 3 || this.isDragging) { // 目が回る
+                    bCtx.font = `bold ${this.size*0.25}px Arial`; bCtx.fillText("@", -eyeX - eyeR, eyeY + eyeR); bCtx.fillText("@", eyeX - eyeR, eyeY + eyeR);
+                } else { // 通常
+                    bCtx.beginPath(); bCtx.arc(-eyeX, eyeY, eyeR, 0, Math.PI*2); bCtx.fill();
+                    bCtx.beginPath(); bCtx.arc(eyeX, eyeY, eyeR, 0, Math.PI*2); bCtx.fill();
+                    bCtx.beginPath(); bCtx.arc(0, this.size*0.1, eyeR, 0, Math.PI); bCtx.stroke();
+                }
+                bCtx.restore();
             }
+            isHit(mx, my) { return mx > this.x - this.size/2 - 10 && mx < this.x + this.size/2 + 10 && my > this.y - this.size/2 - 10 && my < this.y + this.size/2 + 10; }
+            bounce() { this.speedY = -12 - Math.random() * 5; this.speedX = (Math.random() - 0.5) * 10; this.expr = 3; }
         }
-        for(let i=0; i<20; i++) backCubes.push(new BackCube());
-        function bAnimate() { bCtx.clearRect(0,0,bCanvas.width,bCanvas.height); backCubes.forEach(c => {c.update(); c.draw();}); requestAnimationFrame(bAnimate); }
+
+        for (let i = 0; i < 20; i++) cubes.push(new MascotCube());
+
+        bCanvas.addEventListener('mousedown', e => {
+            const rect = bCanvas.getBoundingClientRect(); startMX = e.clientX - rect.left; startMY = e.clientY - rect.top;
+            isMouseDown = true; dragStartTime = Date.now();
+            for (let i = cubes.length - 1; i >= 0; i--) { if (cubes[i].isHit(startMX, startMY)) { draggedCube = cubes[i]; break; } }
+        });
+        window.addEventListener('mousemove', e => {
+            const rect = bCanvas.getBoundingClientRect(); lastMX = mouseX; lastMY = mouseY;
+            mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+            if (draggedCube && isMouseDown) { if (Math.hypot(mouseX - startMX, mouseY - startMY) > 5) { draggedCube.isDragging = true; bCanvas.style.cursor = "grabbing"; }
+            } else { let h = false; cubes.forEach(c => { if(c.isHit(mouseX, mouseY)) h = true; }); bCanvas.style.cursor = h ? "grab" : "default"; }
+        });
+        window.addEventListener('mouseup', () => {
+            if (draggedCube) { if (!draggedCube.isDragging || (Date.now() - dragStartTime < 250)) { draggedCube.bounce(); } draggedCube.isDragging = false; draggedCube = null; }
+            isMouseDown = false; bCanvas.style.cursor = "default";
+        });
+
+        function bAnimate() { bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height); cubes.forEach(c => { c.update(); c.draw(); }); requestAnimationFrame(bAnimate); }
         bAnimate();
 
-        // 進化ゲーム (修正版)
+        // --- 進化ゲーム (修正版：キューブ出現、UI整理) ---
         let engine, render, runner;
-        let gameActive = false;
-        let currentCube = null;
-        let score = 0;
-        const gameWidth = 360; 
-        const gameHeight = 500; 
-        
+        let gameActive = false, currentCube = null, score = 0;
+        const gameWidth = 360, gameHeight = 500;
         const CUBE_TYPES = [
-            { size: 25, color: "#E0FFFF", score: 2 },
-            { size: 40, color: "#87CEEB", score: 4 },
-            { size: 55, color: "#FFD1DC", score: 8 },
-            { size: 75, color: "#FFD700", score: 16 },
-            { size: 100, color: "#9370DB", score: 32 },
-            { size: 130, color: "#32CD32", score: 64 },
+            { size: 25, color: "#E0FFFF", score: 2 }, { size: 40, color: "#87CEEB", score: 4 },
+            { size: 55, color: "#FFD1DC", score: 8 }, { size: 75, color: "#FFD700", score: 16 },
+            { size: 100, color: "#9370DB", score: 32 }, { size: 130, color: "#32CD32", score: 64 },
             { size: 170, color: "#FF4500", score: 128 }
         ];
 
-        function openGame() {
-            document.getElementById('gameModal').style.display = "block";
-            if (!engine) initGame();
-            gameActive = true;
-        }
-
-        function closeGame() {
-            document.getElementById('gameModal').style.display = "none";
-            gameActive = false;
-        }
+        function openGame() { document.getElementById('gameModal').style.display = "block"; if (!engine) initGame(); gameActive = true; }
+        function closeGame() { document.getElementById('gameModal').style.display = "none"; gameActive = false; }
 
         function initGame() {
             const { Engine, Render, Runner, World, Bodies, Events, Body } = Matter;
             engine = Engine.create();
-            const container = document.getElementById('gameContainer');
-            const canvas = document.getElementById('gameCanvas');
-            canvas.width = gameWidth;
-            canvas.height = gameHeight;
-            
-            render = Render.create({
-                element: container,
-                engine: engine,
-                canvas: canvas,
-                options: {
-                    width: gameWidth,
-                    height: gameHeight,
-                    wireframes: false,
-                    background: '#ffffff'
-                }
-            });
-
-            const wallOptions = { isStatic: true, render: { fillStyle: '#333' } };
+            const container = document.getElementById('gameContainer'), gCanvas = document.getElementById('gameCanvas');
+            gCanvas.width = gameWidth; gCanvas.height = gameHeight;
+            render = Render.create({ element: container, engine: engine, canvas: gCanvas, options: { width: gameWidth, height: gameHeight, wireframes: false, background: '#ffffff' } });
             World.add(engine.world, [
-                Bodies.rectangle(gameWidth/2, gameHeight + 25, gameWidth, 50, wallOptions),
-                Bodies.rectangle(-25, gameHeight/2, 50, gameHeight, wallOptions),
-                Bodies.rectangle(gameWidth + 25, gameHeight/2, 50, gameHeight, wallOptions)
+                Bodies.rectangle(gameWidth/2, gameHeight + 25, gameWidth, 50, { isStatic: true, render: { fillStyle: '#333' } }),
+                Bodies.rectangle(-25, gameHeight/2, 50, gameHeight, { isStatic: true, render: { fillStyle: '#333' } }),
+                Bodies.rectangle(gameWidth + 25, gameHeight/2, 50, gameHeight, { isStatic: true, render: { fillStyle: '#333' } })
             ]);
-
-            Render.run(render);
-            runner = Runner.create();
-            Runner.run(runner, engine);
-
+            Render.run(render); runner = Runner.create(); Runner.run(runner, engine);
             Events.on(engine, 'collisionStart', (event) => {
                 event.pairs.forEach((pair) => {
                     const { bodyA, bodyB } = pair;
                     if (bodyA.label && bodyA.label === bodyB.label && bodyA.label.startsWith('c_')) {
                         const idx = parseInt(bodyA.label.split('_')[1]);
                         if (idx < CUBE_TYPES.length - 1) {
-                            const midX = (bodyA.position.x + bodyB.position.x) / 2;
-                            const midY = (bodyA.position.y + bodyB.position.y) / 2;
+                            const midX = (bodyA.position.x + bodyB.position.x) / 2, midY = (bodyA.position.y + bodyB.position.y) / 2;
                             World.remove(engine.world, [bodyA, bodyB]);
-                            spawnCube(midX, midY, idx + 1, false);
-                            updateScore(CUBE_TYPES[idx+1].score);
+                            spawnCube(midX, midY, idx + 1, false); updateScore(CUBE_TYPES[idx+1].score);
                         }
                     }
                 });
             });
-
             Events.on(engine, 'afterUpdate', () => {
                 if (!gameActive) return;
-                engine.world.bodies.forEach(body => {
-                    if (!body.isStatic && body.position.y < 80 && body !== currentCube) {
-                        gameActive = false;
-                        alert("ゲームオーバー！ SCORE: " + score);
-                        resetGame();
-                    }
-                });
+                engine.world.bodies.forEach(body => { if (!body.isStatic && body.position.y < 80 && body !== currentCube) { gameActive = false; alert("GAME OVER! SCORE: " + score); resetGame(); } });
             });
-
-            // デッドライン描画
             Events.on(render, 'afterRender', () => {
-                const c = canvas.getContext('2d');
-                c.strokeStyle = 'rgba(255, 0, 0, 0.4)';
-                c.setLineDash([5, 5]);
-                c.beginPath(); c.moveTo(0, 80); c.lineTo(gameWidth, 80); c.stroke();
-                c.setLineDash([]);
+                const c = gCanvas.getContext('2d');
+                c.strokeStyle = 'rgba(255, 0, 0, 0.4)'; c.setLineDash([5, 5]);
+                c.beginPath(); c.moveTo(0, 80); c.lineTo(gameWidth, 80); c.stroke(); c.setLineDash([]);
             });
-
             createNextCube();
-
-            // 操作
             container.addEventListener('mousedown', (e) => { 
-                if(!gameActive) return;
+                if(!gameActive || !currentCube) return;
                 const rect = container.getBoundingClientRect();
                 const mx = (e.clientX - rect.left) * (gameWidth / rect.width);
-                if (currentCube && currentCube.isStatic) {
-                    Body.setPosition(currentCube, { x: Math.max(25, Math.min(gameWidth-25, mx)), y: 40 });
-                    dropCube();
-                }
+                Body.setPosition(currentCube, { x: Math.max(25, Math.min(gameWidth-25, mx)), y: 40 });
+                dropCube();
             });
-
             window.addEventListener('keydown', (e) => {
                 if (!gameActive || !currentCube) return;
                 if (e.key === 'a' || e.key === 'ArrowLeft') moveCurrent(-20);
                 if (e.key === 'd' || e.key === 'ArrowRight') moveCurrent(20);
                 if (e.key === ' ') dropCube();
             });
-
             container.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                if(!gameActive || !currentCube) return;
+                e.preventDefault(); if(!gameActive || !currentCube) return;
                 const rect = container.getBoundingClientRect();
                 const tx = (e.touches[0].clientX - rect.left) * (gameWidth / rect.width);
                 Body.setPosition(currentCube, { x: Math.max(25, Math.min(gameWidth-25, tx)), y: 40 });
@@ -295,50 +297,23 @@
             });
         }
 
-        function createNextCube() {
-            if (!gameActive) return;
-            const idx = Math.floor(Math.random() * 3);
-            currentCube = spawnCube(gameWidth/2, 40, idx, true);
-        }
-
+        function createNextCube() { if (!gameActive) return; const idx = Math.floor(Math.random() * 3); currentCube = spawnCube(gameWidth/2, 40, idx, true); }
         function spawnCube(x, y, index, isStatic) {
             const type = CUBE_TYPES[index];
-            const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, {
-                friction: 0.3, restitution: 0.3,
-                label: 'c_' + index,
-                isStatic: isStatic,
-                render: { fillStyle: type.color, strokeStyle: '#333', lineWidth: 2 }
-            });
-            Matter.World.add(engine.world, cube);
-            return cube;
+            const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, { friction: 0.3, restitution: 0.3, label: 'c_' + index, isStatic: isStatic, render: { fillStyle: type.color, strokeStyle: '#333', lineWidth: 2 } });
+            Matter.World.add(engine.world, cube); return cube;
         }
-
-        function moveCurrent(dx) {
-            if(!currentCube || !currentCube.isStatic) return;
-            const nx = Math.max(25, Math.min(gameWidth - 25, currentCube.position.x + dx));
-            Matter.Body.setPosition(currentCube, { x: nx, y: 40 });
-        }
-
-        function dropCube() {
-            if (!currentCube || !currentCube.isStatic) return;
-            Matter.Body.setStatic(currentCube, false);
-            currentCube = null;
-            setTimeout(() => { if(gameActive) createNextCube(); }, 1000);
-        }
-
+        function moveCurrent(dx) { if(!currentCube || !currentCube.isStatic) return; Matter.Body.setPosition(currentCube, { x: Math.max(25, Math.min(gameWidth - 25, currentCube.position.x + dx)), y: 40 }); }
+        function dropCube() { if (!currentCube || !currentCube.isStatic) return; Matter.Body.setStatic(currentCube, false); currentCube = null; setTimeout(() => { if(gameActive) createNextCube(); }, 1000); }
         function updateScore(pts) { score += pts; document.getElementById('scoreVal').innerText = score; }
-
         function resetGame() {
             Matter.World.clear(engine.world, true);
-            const wallOptions = { isStatic: true, render: { fillStyle: '#333' } };
             Matter.World.add(engine.world, [
-                Matter.Bodies.rectangle(gameWidth/2, gameHeight + 25, gameWidth, 50, wallOptions),
-                Matter.Bodies.rectangle(-25, gameHeight/2, 50, gameHeight, wallOptions),
-                Matter.Bodies.rectangle(gameWidth + 25, gameHeight/2, 50, gameHeight, wallOptions)
+                Matter.Bodies.rectangle(gameWidth/2, gameHeight + 25, gameWidth, 50, { isStatic: true, render: { fillStyle: '#333' } }),
+                Matter.Bodies.rectangle(-25, gameHeight/2, 50, gameHeight, { isStatic: true, render: { fillStyle: '#333' } }),
+                Matter.Bodies.rectangle(gameWidth + 25, gameHeight/2, 50, gameHeight, { isStatic: true, render: { fillStyle: '#333' } })
             ]);
-            score = 0; updateScore(0);
-            gameActive = true;
-            createNextCube();
+            score = 0; updateScore(0); gameActive = true; createNextCube();
         }
     </script>
 </body>
