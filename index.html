@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desktop Mascot - Official Site</title>
+    <link. href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #87CEEB; /* 空色 */
             --accent-color: #FFD700;  /* ゴールド */
-            --modal-bg: rgba(255, 255, 255, 0.95);
             --text-color: #333;
         }
 
@@ -18,7 +18,8 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            /* 全体のフォントも少し柔らかい印象に変更 */
+            font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
             background-color: #f8f9fa;
             color: var(--text-color);
         }
@@ -43,13 +44,40 @@
             pointer-events: none; /* 背景のクリックを邪魔しない */
         }
 
+        /* ★ タイトルのデザイン変更 ★ */
         h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'M PLUS Rounded 1c', sans-serif; /* 丸くて太いフォント */
+            font-size: 4.5rem; /* サイズを大きく */
+            font-weight: 900; /* 極太 */
+            margin-bottom: 2rem;
+            letter-spacing: 3px; /* 文字間を少し空ける */
+            
+            /* 文字の色をグラデーションにしてアニメーションさせる */
+            background: linear-gradient(45deg, #87CEEB, #FFD700, #FFD1DC, #87CEEB);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 6s ease infinite;
+
+            /* 白い太い縁取りと、立体的な影をつける */
+            text-shadow: 
+                4px 4px 0px #fff, 
+                -4px -4px 0px #fff,
+                4px -4px 0px #fff, 
+                -4px 4px 0px #fff, /* ここまで白い縁取り */
+                7px 7px 20px rgba(0,0,0,0.2); /* 立体的な影 */
+                
+            /* 以前の白い背景ボックスは削除して文字を際立たせる */
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        /* グラデーションを動かすアニメーション定義 */
+        @keyframes gradientText {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
 
         /* ボタンデザイン */
@@ -70,6 +98,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-family: 'M PLUS Rounded 1c', sans-serif; /* ボタンのフォントも統一 */
         }
 
         .btn:hover {
@@ -104,6 +133,7 @@
             position: relative;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             line-height: 1.8;
+            font-family: 'M PLUS Rounded 1c', sans-serif; /* モーダル内のフォントも統一 */
         }
 
         .close-btn {
@@ -118,7 +148,7 @@
 
         .close-btn:hover { color: #333; }
 
-        h2 { color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 10px; font-weight: 900; }
         .modal-body ul { padding-left: 20px; }
         .modal-body li { margin-bottom: 10px; }
 
@@ -132,12 +162,12 @@
             pointer-events: auto;
             background: rgba(255, 255, 255, 0.5);
             padding: 5px 0;
+            font-weight: bold;
         }
 
         footer a {
             color: var(--primary-color);
             text-decoration: none;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -166,7 +196,7 @@
             <div class="modal-body">
                 <p>デスクトップマスコット本体のダウンロードはこちらから。</p>
                 <p style="color: #666; font-size: 0.9rem;">※現在は準備中です。BOOTHでの公開をお待ちください。</p>
-                <a href="#" style="display:inline-block; margin-top:20px; background:#ff5a5f; color:white; padding:15px 30px; border-radius:10px; text-decoration:none; font-weight:bold;">BOOTHで入手する（Coming Soon）</a>
+                <a href="#" target="_blank" style="display:inline-block; margin-top:20px; background:#ff5a5f; color:white; padding:15px 30px; border-radius:10px; text-decoration:none; font-weight:bold; box-shadow: 0 5px 15px rgba(255,90,95,0.4);">BOOTHで入手する（Coming Soon）</a>
             </div>
         </div>
     </div>
