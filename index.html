@@ -55,15 +55,25 @@
         .btn-game { border-color: #9370DB; box-shadow: 0 4px 0 #9370DB; color: #9370DB; grid-column: span 2; font-size: 1.1rem; }
         .btn-game:hover { background: #f3efff; }
 
+        /* ★モーダルの中央寄せ修正★ */
         .modal {
-            display: none; position: fixed; z-index: 100;
+            display: none; /* 初期状態は非表示 */
+            position: fixed; z-index: 100;
             left: 0; top: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            /* Flexboxで上下左右中央寄せ */
+            justify-content: center;
+            align-items: center;
+            padding: 20px; /* スマホでの端余白 */
+            box-sizing: border-box;
         }
         .modal-content {
-            background: white; margin: 2vh auto; padding: 25px; border-radius: 25px;
-            width: 90%; max-width: 440px; max-height: 95vh; overflow-y: auto;
+            background: white; 
+            padding: 25px; border-radius: 25px;
+            width: 100%; max-width: 440px; /* 幅を調整 */
+            max-height: 90vh; overflow-y: auto;
             position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            /* margin: auto は削除し、Flexboxに任せる */
         }
 
         #gameContainer {
@@ -167,7 +177,7 @@
         function bResize() { bCanvas.width = window.innerWidth; bCanvas.height = window.innerHeight; }
         window.addEventListener('resize', bResize); bResize();
 
-        class BackCube {
+        class MascotCube {
             constructor() { this.init(); this.y = Math.random() * bCanvas.height; }
             init() {
                 this.size = 45 + Math.random() * 40; this.x = Math.random() * bCanvas.width; this.y = -this.size - (Math.random() * 700);
@@ -220,7 +230,7 @@
         function bAnimate() { bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height); backCubes.forEach(c => { c.update(); c.draw(); }); requestAnimationFrame(bAnimate); }
         bAnimate();
 
-        // --- ミニゲーム (修正版：Game Overバグ修正、顔追加) ---
+        // --- ミニゲーム ---
         let engine, render, runner;
         let gameActive = false, currentCube = null, score = 0;
         const gameWidth = 360, gameHeight = 500;
@@ -234,9 +244,10 @@
             { size: 170, color: "#FF4500", score: 128, expr: 0 }
         ];
 
-        function openGame() { document.getElementById('gameModal').style.display = "block"; if (!engine) initGame(); gameActive = true; resetGame(); }
+        // ★モーダル表示切り替えをflexに変更★
+        function openGame() { document.getElementById('gameModal').style.display = "flex"; if (!engine) initGame(); gameActive = true; resetGame(); }
         function closeGame() { document.getElementById('gameModal').style.display = "none"; gameActive = false; }
-        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function openModal(id) { document.getElementById(id).style.display = "flex"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function closeModalOnOuter(event) { if (event.target.className === "modal") event.target.style.display = "none"; }
         function showRules() { alert('同じ種類をくっつけて進化！\n王様を目指そう。\n【注意】一度ラインの下に落ちた子が再度ラインを超えて止まるとゲームオーバー。'); }
@@ -269,9 +280,7 @@
                 if (!gameActive) return;
                 engine.world.bodies.forEach(body => { 
                     if (!body.isStatic && !body.isSensor && body !== currentCube) {
-                        // 一度ラインより下へ行ったかを判定
                         if (body.position.y > DEAD_LINE_Y + 30) body.hasPassedLine = true;
-                        // ラインより下へ行った「後」にラインを超え、かつ速度が落ちた場合のみGame Over
                         if (body.hasPassedLine && body.position.y < DEAD_LINE_Y && Math.abs(body.velocity.y) < 0.2) { 
                             gameActive = false; alert("GAME OVER! SCORE: " + score); resetGame(); 
                         } 
@@ -279,14 +288,10 @@
                 });
             });
 
-            // ★ゲーム内の顔描画★
             Events.on(render, 'afterRender', () => {
                 const c = gCanvas.getContext('2d');
-                // ライン描画
                 c.strokeStyle = 'rgba(255, 0, 0, 0.6)'; c.setLineDash([5, 5]); c.lineWidth = 2;
                 c.beginPath(); c.moveTo(0, DEAD_LINE_Y); c.lineTo(gameWidth, DEAD_LINE_Y); c.stroke(); c.setLineDash([]);
-                
-                // 全キューブの顔を描画
                 engine.world.bodies.forEach(body => {
                     if (body.label && body.label.startsWith('c_')) {
                         const idx = parseInt(body.label.split('_')[1]);
