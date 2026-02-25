@@ -21,7 +21,6 @@
             background-color: #f8f9fa;
         }
 
-        /* 背景キャンバス */
         #mascotCanvas { position: fixed; top: 0; left: 0; z-index: 1; cursor: default; width: 100%; height: 100%; }
 
         .ui-layer {
@@ -57,7 +56,6 @@
         .btn-game { border-color: #9370DB; box-shadow: 0 4px 0 #9370DB; color: #9370DB; grid-column: span 2; font-size: 1.1rem; }
         .btn-game:hover { background: #f3efff; }
 
-        /* モーダル全体の中央配置設定 */
         .modal {
             display: none; position: fixed; z-index: 100;
             left: 0; top: 0; width: 100%; height: 100%;
@@ -82,6 +80,8 @@
         .game-ui { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .score-box { font-size: 1.2rem; font-weight: 900; color: #333; }
         .rule-btn { background: #f0f0f0; border: 2px solid #ddd; padding: 4px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: inherit; }
+        .collection-btn { background: #FFFACD; border-color: #FFD700; color: #B8860B; margin-left: 5px; }
+        .collection-btn:hover { background: #FFF0F5; border-color: #FF69B4; color: #FF1493; }
 
         .game-close-btn {
             display: block; width: fit-content; margin: 15px auto 5px;
@@ -93,7 +93,20 @@
 
         .controls-hint { font-size: 0.8rem; text-align: center; color: #888; font-weight: bold; line-height: 1.4; margin-top: 5px; }
 
-        h2 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; font-size: 1.3rem; }
+        h2 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; font-size: 1.3rem; margin-top: 0; }
+        
+        /* ★図鑑用のCSS★ */
+        .collection-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;
+        }
+        .collection-item {
+            display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; font-weight: bold; color: #555;
+        }
+        .collection-canvas {
+            width: 60px; height: 60px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        @media (max-width: 400px) { .collection-grid { grid-template-columns: repeat(3, 1fr); } }
+
         footer { position: absolute; bottom: 15px; width: 100%; text-align: center; z-index: 10; font-size: 0.8rem; color: #888; pointer-events: auto; }
         footer a { color: var(--primary-color); text-decoration: none; border-bottom: 1px solid; }
     </style>
@@ -118,7 +131,10 @@
     <div id="gameModal" class="modal">
         <div class="modal-content">
             <div class="game-ui">
-                <button class="rule-btn" onclick="alert('【ルール】\n同じ種類をくっつけて進化！\n最大サイズを2つくっつけると、消滅して1000点ボーナス！\n【注意】積み上がった子が赤いラインに触れるとゲームオーバーです。')">ルール</button>
+                <div>
+                    <button class="rule-btn" onclick="alert('【ルール】\n同じ種類をくっつけて進化！\n最大サイズを2つくっつけると、消滅して1000点ボーナス！\n【注意】積み上がった子が赤いラインに触れるとゲームオーバーです。')">ルール</button>
+                    <button class="rule-btn collection-btn" onclick="openCollection()">図鑑</button>
+                </div>
                 <div class="score-box">SCORE: <span id="scoreVal">0</span></div>
             </div>
             <div id="gameContainer">
@@ -137,9 +153,19 @@
     <div id="privacyModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>プライバシー</h2><p>データはローカル保存のみ。外部送信は行いません。</p><button class="game-close-btn" onclick="closeModal('privacyModal')">＞ 閉じる ＜</button></div></div>
     <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>ダウンロード</h2><p>現在準備中です。BOOTHでの公開をお待ちください。</p><button class="game-close-btn" onclick="closeModal('downloadModal')">＞ 閉じる ＜</button></div></div>
 
+    <div id="collectionModal" class="modal">
+        <div class="modal-content" style="max-width: 440px;">
+            <h2>マスコット図鑑</h2>
+            <p style="font-size: 0.85rem; color: #666; text-align: center; margin-top: -5px; margin-bottom: 5px;">ゲームで新しく進化させると解放されます。</p>
+            <div id="collectionGrid" class="collection-grid"></div>
+            <button class="game-close-btn" onclick="closeModal('collectionModal')">＞ 閉じる ＜</button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
     <script>
+        // UI制御
         function openModal(id) { document.getElementById(id).style.display = "flex"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function closeModalOnOuter(event) { if (event.target.className === "modal") event.target.style.display = "none"; }
@@ -166,7 +192,7 @@
             ctx.restore();
         }
 
-        // --- 背景アニメーション (20個・超スロー) ---
+        // --- 背景アニメーション ---
         const bCanvas = document.getElementById('mascotCanvas');
         const bCtx = bCanvas.getContext('2d');
         let backCubes = [];
@@ -233,17 +259,7 @@
         function bAnimate() { bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height); backCubes.forEach(c => { c.update(); c.draw(); }); requestAnimationFrame(bAnimate); }
         bAnimate();
 
-        // --- ミニゲーム ---
-        let engine, render, runner;
-        let gameActive = false, currentCube = null, score = 0;
-        let isGameInitialized = false; 
-        
-        const gameWidth = 360, gameHeight = 500;
-        const DEAD_LINE_Y = 100; 
-        const SPAWN_Y = 30;      
-        
-        // ★第8段階目（最大サイズ：200）を追加！★
-        // 200サイズは画面に縦に2つ置くと(400)、ゲーム高さ500-100(デッドライン)にピッタリ到達します。
+        // --- 図鑑システム（ローカルストレージ連携） ---
         const CUBE_TYPES = [
             { size: 25, color: "#E0FFFF", score: 2, expr: 1 }, 
             { size: 40, color: "#87CEEB", score: 4, expr: 0 },
@@ -252,8 +268,88 @@
             { size: 100, color: "#9370DB", score: 32, expr: 0 }, 
             { size: 130, color: "#32CD32", score: 64, expr: 0 },
             { size: 165, color: "#FF4500", score: 128, expr: 0 },
-            { size: 200, color: "#FF1493", score: 256, expr: 3 } // 新規追加：超特大ピンク！
+            { size: 200, color: "#FF1493", score: 256, expr: 3 }
         ];
+
+        // 初期化：保存データがあれば読み込み、無ければすべて未解放(false)
+        let unlockedCubes = JSON.parse(localStorage.getItem('mascot_collection')) || Array(CUBE_TYPES.length).fill(false);
+
+        function openCollection() {
+            openModal('collectionModal');
+            drawCollection();
+        }
+
+        function drawCollection() {
+            const grid = document.getElementById('collectionGrid');
+            grid.innerHTML = '';
+            
+            CUBE_TYPES.forEach((type, index) => {
+                const isUnlocked = unlockedCubes[index];
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'collection-item';
+                
+                // キャンバスを生成（高解像度で描画してCSSで縮小）
+                const canvas = document.createElement('canvas');
+                canvas.className = 'collection-canvas';
+                canvas.width = 120; 
+                canvas.height = 120;
+                const ctx = canvas.getContext('2d');
+                
+                const size = 80;
+                const x = 60;
+                const y = 60;
+                
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.lineWidth = 4;
+                
+                if (isUnlocked) {
+                    // 解放済みの描画
+                    ctx.fillStyle = type.color; 
+                    ctx.strokeStyle = "#333"; 
+                    ctx.beginPath(); 
+                    let r = 15;
+                    ctx.moveTo(-size/2 + r, -size/2); ctx.arcTo(size/2, -size/2, size/2, size/2, r);
+                    ctx.arcTo(size/2, size/2, -size/2, size/2, r); ctx.arcTo(-size/2, size/2, -size/2, -size/2, r);
+                    ctx.arcTo(-size/2, -size/2, size/2, -size/2, r); ctx.fill(); ctx.stroke();
+                    drawFace(ctx, 0, 0, size, 0, type.expr);
+                } else {
+                    // 未解放（シルエットと？）
+                    ctx.fillStyle = "#e0e0e0"; 
+                    ctx.strokeStyle = "#aaa"; 
+                    ctx.beginPath(); 
+                    let r = 15;
+                    ctx.moveTo(-size/2 + r, -size/2); ctx.arcTo(size/2, -size/2, size/2, size/2, r);
+                    ctx.arcTo(size/2, size/2, -size/2, size/2, r); ctx.arcTo(-size/2, size/2, -size/2, -size/2, r);
+                    ctx.arcTo(-size/2, -size/2, size/2, -size/2, r); ctx.fill(); ctx.stroke();
+                    
+                    ctx.fillStyle = "#aaa";
+                    ctx.font = "bold 50px Arial";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("?", 0, 5);
+                }
+                ctx.restore();
+                
+                itemDiv.appendChild(canvas);
+                
+                // レベルテキスト
+                const label = document.createElement('span');
+                label.innerText = isUnlocked ? `Lv.${index + 1}` : "???";
+                itemDiv.appendChild(label);
+                
+                grid.appendChild(itemDiv);
+            });
+        }
+
+        // --- ミニゲーム ---
+        let engine, render, runner;
+        let gameActive = false, currentCube = null, score = 0;
+        let isGameInitialized = false; 
+        
+        const gameWidth = 360, gameHeight = 500;
+        const DEAD_LINE_Y = 100; 
+        const SPAWN_Y = 30;      
 
         function openGame() { 
             document.getElementById('gameModal').style.display = "flex"; 
@@ -286,13 +382,10 @@
                         World.remove(engine.world, [bodyA, bodyB]);
 
                         if (idx < CUBE_TYPES.length - 1) {
-                            // 通常の進化
                             spawnCube(midX, midY, idx + 1, false); 
                             score += CUBE_TYPES[idx+1].score; 
                         } else {
-                            // ★最大サイズ同士の合体：消滅して特大ボーナス！★
                             score += 1000; 
-                            // （任意）ここでパーティクル等を出しても面白いです
                         }
                         document.getElementById('scoreVal').innerText = score;
                     }
@@ -303,8 +396,6 @@
                 if (!gameActive) return;
                 engine.world.bodies.forEach(body => { 
                     if (!body.isStatic && body.label && body.label.startsWith('c_') && body !== currentCube) {
-                        
-                        // はみ出し判定を「頂点」で行う
                         if (body.bounds.min.y <= DEAD_LINE_Y) {
                             if (Math.abs(body.velocity.y) < 0.5 && Math.abs(body.velocity.x) < 0.5) {
                                 body.restCounter = (body.restCounter || 0) + 1;
@@ -366,7 +457,15 @@
         function spawnCube(x, y, index, isStatic) {
             const type = CUBE_TYPES[index];
             const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, { friction: 0.3, restitution: 0.1, label: 'c_' + index, isStatic: isStatic, render: { fillStyle: type.color, strokeStyle: '#333', lineWidth: 2 } });
-            Matter.World.add(engine.world, cube); return cube;
+            Matter.World.add(engine.world, cube); 
+            
+            // ★図鑑のアンロック処理★
+            if (!unlockedCubes[index]) {
+                unlockedCubes[index] = true;
+                localStorage.setItem('mascot_collection', JSON.stringify(unlockedCubes));
+            }
+            
+            return cube;
         }
         
         function resetGame() {
