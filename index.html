@@ -8,6 +8,8 @@
 
     <title>Desktop Mascot - Official Site</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
             --primary-color: #87CEEB;
@@ -104,8 +106,20 @@
         .collection-canvas { width: 60px; height: 60px; margin-bottom: 5px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         @media (max-width: 400px) { .collection-grid { grid-template-columns: repeat(3, 1fr); } }
 
+        /* ★クレジット用のCSS★ */
+        .credit-section { margin-bottom: 25px; text-align: center; }
+        .credit-section h3 { font-size: 0.95rem; color: var(--primary-color); border-bottom: 2px dotted var(--primary-color); display: inline-block; padding-bottom: 3px; margin-bottom: 8px; }
+        .credit-name { font-size: 1.3rem; font-weight: 900; margin: 0 0 12px 0; color: #444; }
+        .social-links { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .social-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; text-decoration: none; color: white; transition: 0.2s; }
+        .social-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-youtube { background: #FF0000; }
+        .btn-x { background: #000000; }
+        .btn-litlink { background: #14B8A6; }
+
         footer { position: absolute; bottom: 15px; width: 100%; text-align: center; z-index: 10; font-size: 0.8rem; color: #888; pointer-events: auto; }
-        footer a { color: var(--primary-color); text-decoration: none; border-bottom: 1px solid; }
+        footer a { color: var(--primary-color); text-decoration: none; border-bottom: 1px solid; cursor: pointer; margin: 0 5px;}
+        footer a:hover { color: var(--accent-color); border-color: var(--accent-color); }
     </style>
 </head>
 <body>
@@ -125,7 +139,7 @@
         </div>
     </div>
 
-    <footer>made by Jumu Tinora(DSKR) | <a href="https://dskr-home.vercel.app/#home" target="_blank">サークル公式HP</a></footer>
+    <footer>made by Jumu Tinora(DSKR) | <a href="https://dskr-home.vercel.app/#home" target="_blank">サークル公式HP</a> | <a onclick="openModal('creditsModal')">クレジット</a></footer>
 
     <div id="gameModal" class="modal">
         <div class="modal-content">
@@ -159,12 +173,40 @@
         </div>
     </div>
 
+    <div id="creditsModal" class="modal" onclick="closeModalOnOuter(event)">
+        <div class="modal-content">
+            <h2>クレジット</h2>
+            
+            <div class="credit-section">
+                <h3>初期案発案者</h3>
+                <p class="credit-name">動く点P(ゼラ)</p>
+                <div class="social-links">
+                    <a href="https://www.youtube.com/@tenpzera" target="_blank" class="social-btn btn-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>
+                    <a href="https://x.com/nikogori_z" target="_blank" class="social-btn btn-x"><i class="fa-brands fa-x-twitter"></i> X</a>
+                    <a href="https://lit.link/ugopizera" target="_blank" class="social-btn btn-litlink"><i class="fa-solid fa-link"></i> lit.link</a>
+                </div>
+            </div>
+
+            <div class="credit-section">
+                <h3>システム開発</h3>
+                <p class="credit-name">千野羅樹夢（サークルDSKR）</p>
+            </div>
+
+            <div class="credit-section">
+                <h3>support</h3>
+                <p class="credit-name" style="color: #aaa; font-size: 0.9rem; font-weight: normal;">（サポーターが追加された際に記載します）</p>
+            </div>
+
+            <button class="game-close-btn" onclick="closeModal('creditsModal')">＞ 閉じる ＜</button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
     <script>
         function openModal(id) { document.getElementById(id).style.display = "flex"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
-        function closeModalOnOuter(event) { if (event.target.className === "modal") event.target.style.display = "none"; }
+        function closeModalOnOuter(event) { if (event.target.className === "modal" || event.target.className.includes("modal ")) event.target.style.display = "none"; }
         window.addEventListener('keydown', (e) => { if (e.key === "Escape") document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); });
 
         function drawFace(ctx, x, y, size, rotation, expr) {
