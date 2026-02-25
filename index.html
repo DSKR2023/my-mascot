@@ -33,17 +33,13 @@
         .logo-title h1 {
             margin: 0; font-size: 3.5rem; font-weight: 900;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--pink-color), var(--primary-color));
-            background-size: 200% auto; -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1px white;
-            paint-order: stroke fill;
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientAnim 6s linear infinite; -webkit-text-stroke: 1px white; paint-order: stroke fill;
         }
 
         @keyframes gradientAnim { to { background-position: 200% center; } }
 
-        .button-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; pointer-events: auto;
-        }
+        .button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; pointer-events: auto; }
 
         .btn {
             background: white; border: 2.5px solid var(--primary-color);
@@ -65,15 +61,12 @@
         .modal-content {
             background: white; padding: 25px; border-radius: 25px;
             width: 90%; max-width: 420px; max-height: 95vh; overflow-y: auto; overflow-x: hidden;
-            position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            box-sizing: border-box;
+            position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); box-sizing: border-box;
         }
 
         #gameContainer {
-            width: fit-content; max-width: 100%; height: 500px;
-            margin: 0 auto; background: #fff; border: 4px solid #333;
-            border-radius: 10px; position: relative; overflow: hidden; touch-action: none;
-            box-sizing: content-box;
+            width: fit-content; max-width: 100%; height: 500px; margin: 0 auto; background: #fff; border: 4px solid #333;
+            border-radius: 10px; position: relative; overflow: hidden; touch-action: none; box-sizing: content-box;
         }
         #gameCanvas { display: block; max-width: 100%; height: auto; margin: 0 auto; }
         
@@ -86,8 +79,7 @@
         .game-close-btn {
             display: block; width: fit-content; margin: 15px auto 5px;
             background: transparent; border: none; color: #aaa;
-            font-size: 1.1rem; font-weight: bold; cursor: pointer;
-            transition: 0.3s; pointer-events: auto;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; pointer-events: auto;
         }
         .game-close-btn:hover { color: #333; transform: scale(1.1); }
 
@@ -113,7 +105,7 @@
         <div class="button-grid">
             <button class="btn btn-game" onclick="openGame()">🎮 ゲーム広場（進化キューブ）</button>
             <button class="btn" onclick="openModal('howToUseModal')">📖 使用方法</button>
-            <button class="btn" onclick="openModal('termsModal')">📜 利用規約</button>
+            <button class="btn" onclick="window.open('terms.html', '_blank')">📜 利用規約</button>
             <button class="btn" onclick="window.open('privacy.html', '_blank')">🔒 プライバシー</button>
             <button class="btn" onclick="openModal('downloadModal')">📥 ダウンロード</button>
         </div>
@@ -142,7 +134,6 @@
     </div>
 
     <div id="howToUseModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>使用方法</h2><p>DesktopMascot.exeを起動してください。背景の子はドラッグやクリックで遊べます。</p><button class="game-close-btn" onclick="closeModal('howToUseModal')">＞ 閉じる ＜</button></div></div>
-    <div id="termsModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>利用規約</h2><p>二次配布禁止。改造は可能ですが自作発言は禁止です。</p><button class="game-close-btn" onclick="closeModal('termsModal')">＞ 閉じる ＜</button></div></div>
     <div id="downloadModal" class="modal" onclick="closeModalOnOuter(event)"><div class="modal-content"><h2>ダウンロード</h2><p>現在準備中です。BOOTHでの公開をお待ちください。</p><button class="game-close-btn" onclick="closeModal('downloadModal')">＞ 閉じる ＜</button></div></div>
 
     <div id="collectionModal" class="modal">
@@ -262,10 +253,7 @@
 
         let unlockedCubes = JSON.parse(localStorage.getItem('mascot_collection')) || Array(CUBE_TYPES.length).fill(false);
 
-        function openCollection() {
-            openModal('collectionModal');
-            drawCollection();
-        }
+        function openCollection() { openModal('collectionModal'); drawCollection(); }
 
         function drawCollection() {
             const grid = document.getElementById('collectionGrid');
@@ -339,17 +327,31 @@
                     const { bodyA, bodyB } = pair;
                     if (bodyA.label && bodyA.label === bodyB.label && bodyA.label.startsWith('c_')) {
                         const idx = parseInt(bodyA.label.split('_')[1]);
-                        const midX = (bodyA.position.x + bodyB.position.x) / 2;
-                        const midY = (bodyA.position.y + bodyB.position.y) / 2;
-                        World.remove(engine.world, [bodyA, bodyB]);
-
+                        
                         if (idx < CUBE_TYPES.length - 1) {
+                            const midX = (bodyA.position.x + bodyB.position.x) / 2;
+                            const midY = (bodyA.position.y + bodyB.position.y) / 2;
+                            World.remove(engine.world, [bodyA, bodyB]);
                             spawnCube(midX, midY, idx + 1, false); 
                             score += CUBE_TYPES[idx+1].score; 
+                            document.getElementById('scoreVal').innerText = score;
                         } else {
+                            // ★最大サイズ消滅の演出（遅延処理）★
+                            bodyA.label = 'merged'; // 多重判定を防止
+                            bodyB.label = 'merged';
                             score += 1000; 
+                            document.getElementById('scoreVal').innerText = score;
+                            
+                            // 消える直前に空中で静止し、半透明になる
+                            Body.setStatic(bodyA, true);
+                            Body.setStatic(bodyB, true);
+                            bodyA.render.opacity = 0.5;
+                            bodyB.render.opacity = 0.5;
+
+                            setTimeout(() => {
+                                Matter.World.remove(engine.world, [bodyA, bodyB]);
+                            }, 1200); // 1.2秒後に完全に消す
                         }
-                        document.getElementById('scoreVal').innerText = score;
                     }
                 });
             });
@@ -363,7 +365,8 @@
                                 body.restCounter = (body.restCounter || 0) + 1;
                                 if (body.restCounter > 10) { 
                                     gameActive = false; 
-                                    setTimeout(() => { alert("GAME OVER! SCORE: " + score); closeGame(); }, 50);
+                                    // ★ゲームオーバー時も少し間を持たせる（0.5秒）★
+                                    setTimeout(() => { alert("GAME OVER! SCORE: " + score); closeGame(); }, 500);
                                 }
                             } else { body.restCounter = 0; }
                         } else { body.restCounter = 0; }
@@ -377,9 +380,13 @@
                 c.beginPath(); c.moveTo(-100, DEAD_LINE_Y); c.lineTo(gameWidth + 100, DEAD_LINE_Y); c.stroke(); c.setLineDash([]);
                 
                 engine.world.bodies.forEach(body => {
-                    if (body.label && body.label.startsWith('c_')) {
-                        const idx = parseInt(body.label.split('_')[1]);
+                    // opacityプロパティを反映させて描画
+                    if (body.label && (body.label.startsWith('c_') || body.label === 'merged')) {
+                        const labelParts = body.label === 'merged' ? ['c', CUBE_TYPES.length - 1] : body.label.split('_');
+                        const idx = parseInt(labelParts[1]);
+                        c.globalAlpha = body.render.opacity || 1; // 半透明の適用
                         drawFace(c, body.position.x, body.position.y, CUBE_TYPES[idx].size, body.angle, CUBE_TYPES[idx].expr);
+                        c.globalAlpha = 1; // 戻す
                     }
                 });
             });
@@ -418,7 +425,7 @@
         
         function spawnCube(x, y, index, isStatic) {
             const type = CUBE_TYPES[index];
-            const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, { friction: 0.3, restitution: 0.1, label: 'c_' + index, isStatic: isStatic, render: { fillStyle: type.color, strokeStyle: '#333', lineWidth: 2 } });
+            const cube = Matter.Bodies.rectangle(x, y, type.size, type.size, { friction: 0.3, restitution: 0.1, label: 'c_' + index, isStatic: isStatic, render: { fillStyle: type.color, strokeStyle: '#333', lineWidth: 2, opacity: 1 } });
             Matter.World.add(engine.world, cube); 
             
             if (!unlockedCubes[index]) {
