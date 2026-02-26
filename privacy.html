@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>プライバシーポリシー - Desktop Mascot</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'M PLUS Rounded 1c', sans-serif;
@@ -42,6 +43,19 @@
             margin-top: 30px;
             border: 2px solid #87CEEB;
         }
+
+        /* ★クレジット用のCSS★ */
+        .credit-wrapper { margin-top: 20px; }
+        .credit-section { margin-bottom: 25px; }
+        .credit-section h3 { font-size: 0.95rem; color: #87CEEB; border-bottom: 2px dotted #87CEEB; display: inline-block; padding-bottom: 3px; margin-bottom: 8px; }
+        .credit-name { font-size: 1.3rem; font-weight: 900; margin: 0 0 12px 0; color: #444; line-height: 1.4; }
+        .social-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .social-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; text-decoration: none; color: white; transition: 0.2s; }
+        .social-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-youtube { background: #FF0000; }
+        .btn-x { background: #000000; }
+        .btn-litlink { background: #14B8A6; }
+
         .btn-back {
             display: block;
             width: fit-content;
@@ -86,6 +100,33 @@
 
         <h2>5. 本ポリシーの変更</h2>
         <p>当サークルは、法令の変更や機能追加に伴い、必要に応じて本ポリシーを変更することがあります。変更後のプライバシーポリシーは、本ウェブサイトに掲載した時点から効力を生じるものとします。</p>
+
+        <h2>6. クレジット (Credits)</h2>
+        <div class="credit-wrapper">
+            <div class="credit-section">
+                <h3>初期案発案者</h3>
+                <p class="credit-name">動く点P(ゼラ)</p>
+                <div class="social-links">
+                    <a href="https://www.youtube.com/@tenpzera" target="_blank" class="social-btn btn-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>
+                    <a href="https://x.com/nikogori_z" target="_blank" class="social-btn btn-x"><i class="fa-brands fa-x-twitter"></i> X</a>
+                    <a href="https://lit.link/ugopizera" target="_blank" class="social-btn btn-litlink"><i class="fa-solid fa-link"></i> lit.link</a>
+                </div>
+            </div>
+
+            <div class="credit-section">
+                <h3>アドバイザー</h3>
+                <p class="credit-name">Hiro<br>MIYABI（DSKR）</p>
+            </div>
+
+            <div class="credit-section">
+                <h3>システム開発</h3>
+                <p class="credit-name">千野羅樹夢（サークルDSKR）</p>
+            </div>
+            <div class="credit-section">
+                <h3>support</h3>
+                <p class="credit-name" style="color: #aaa; font-size: 0.9rem; font-weight: normal;">（サポーターが追加された際に記載します）</p>
+            </div>
+        </div>
 
         <div class="contact-info">
             <h3 style="margin-top: 0; color: #87CEEB;">運営者情報（お問い合わせ先）</h3>
