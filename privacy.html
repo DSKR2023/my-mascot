@@ -1,144 +1,174 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プライバシーポリシー - Desktop Mascot</title>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.8;
-            padding: 40px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            color: #87CEEB;
-            text-align: center;
-            border-bottom: 3px solid #FFD700;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #ff5a5f;
-            font-size: 1.3rem;
-            margin-top: 30px;
-            border-left: 5px solid #FFD700;
-            padding-left: 10px;
-        }
-        .policy-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .contact-info {
-            background: #f0faff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border: 2px solid #87CEEB;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Desktop Mascotのプライバシーポリシー。取得する情報、Google API利用時の扱い、保存先、第三者提供の有無を説明します。">
+  <title>プライバシーポリシー - Desktop Mascot</title>
+  <style>
+    :root {
+      --ink: #263238;
+      --muted: #59666d;
+      --line: #d8e2e5;
+      --paper: #fffdf8;
+      --sky: #7fc7df;
+      --gold: #e2ae36;
+      --soft-blue: #eaf7fb;
+    }
 
-        /* ★クレジット用のCSS★ */
-        .credit-wrapper { margin-top: 20px; }
-        .credit-section { margin-bottom: 25px; }
-        .credit-section h3 { font-size: 0.95rem; color: #87CEEB; border-bottom: 2px dotted #87CEEB; display: inline-block; padding-bottom: 3px; margin-bottom: 8px; }
-        .credit-name { font-size: 1.3rem; font-weight: 900; margin: 0 0 12px 0; color: #444; line-height: 1.4; }
-        .social-links { display: flex; gap: 8px; flex-wrap: wrap; }
-        .social-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; text-decoration: none; color: white; transition: 0.2s; }
-        .social-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .btn-youtube { background: #FF0000; }
-        .btn-x { background: #000000; }
-        .btn-litlink { background: #14B8A6; }
+    * {
+      box-sizing: border-box;
+    }
 
-        .btn-back {
-            display: block;
-            width: fit-content;
-            margin: 40px auto 0;
-            background: #87CEEB;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 4px 0 #5faccb;
-            transition: 0.2s;
-        }
-        .btn-back:hover {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #5faccb;
-        }
-    </style>
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, Arial, sans-serif;
+      line-height: 1.8;
+    }
+
+    .page-header,
+    .page-footer {
+      background: var(--soft-blue);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .inner {
+      width: min(880px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 36px 0 10px;
+      padding-left: 12px;
+      border-left: 5px solid var(--gold);
+      font-size: 1.28rem;
+      letter-spacing: 0;
+    }
+
+    p,
+    li {
+      overflow-wrap: anywhere;
+    }
+
+    main .inner {
+      padding: 48px 0;
+    }
+
+    .notice {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      font-weight: 700;
+    }
+
+    a {
+      color: #176b83;
+      font-weight: 800;
+    }
+
+    .back-link {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      margin-top: 28px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-
-    <h1>プライバシーポリシー (Privacy Policy)</h1>
-
-    <div class="policy-content">
-        <p>デジタルハリウッドサークルDSKR（以下、「当サークル」といいます）は、提供するアプリケーション「Desktop Mascot」（以下、「本アプリ」といいます）における、ユーザーの個人情報およびデータの取り扱いについて、以下の通りプライバシーポリシー（以下、「本ポリシー」といいます）を定めます。</p>
-
-        <h2>1. Googleデータの利用目的について</h2>
-        <p>本アプリは、ユーザーに以下の機能を提供するためにのみ、Google APIを通じてユーザーデータにアクセスします。</p>
-        <ul>
-            <li><strong>Google カレンダー API:</strong> デスクトップ上でユーザーの予定を通知・表示するために読み取りアクセスを行います。</li>
-            <li><strong>Google ドライブ API:</strong> ユーザーが本アプリ内で作成した設定やメモデータをバックアップ・同期するために、ファイルへの読み書きアクセスを行います。</li>
-        </ul>
-
-        <h2>2. データの保存先と保護</h2>
-        <p>本アプリが取得したGoogleユーザーデータ（認証トークン等を含む）は、すべて<strong>ユーザーのローカルPC内（端末内）にのみ保存・処理</strong>されます。当サークルや開発者を含む外部のサーバーへ送信、収集、蓄積されることは一切ありません。</p>
-
-        <h2>3. データの第三者提供について</h2>
-        <p>当サークルは、本アプリを通じて取得したユーザーデータを、いかなる第三者にも提供、共有、販売することはありません。</p>
-
-        <h2>4. Google API Services User Data Policy の遵守</h2>
-        <p>本アプリによるGoogle APIから取得した情報の利用および他のアプリへの転送は、Limited Use要件を含む <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a> に準拠します。</p>
-
-        <h2>5. 本ポリシーの変更</h2>
-        <p>当サークルは、法令の変更や機能追加に伴い、必要に応じて本ポリシーを変更することがあります。変更後のプライバシーポリシーは、本ウェブサイトに掲載した時点から効力を生じるものとします。</p>
-
-        <h2>6. クレジット (Credits)</h2>
-        <div class="credit-wrapper">
-            <div class="credit-section">
-                <h3>初期案発案者</h3>
-                <p class="credit-name">動く点P(ゼラ)</p>
-                <div class="social-links">
-                    <a href="https://www.youtube.com/@tenpzera" target="_blank" class="social-btn btn-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>
-                    <a href="https://x.com/nikogori_z" target="_blank" class="social-btn btn-x"><i class="fa-brands fa-x-twitter"></i> X</a>
-                    <a href="https://lit.link/ugopizera" target="_blank" class="social-btn btn-litlink"><i class="fa-solid fa-link"></i> lit.link</a>
-                </div>
-            </div>
-
-            <div class="credit-section">
-                <h3>システムコンサルタント</h3>
-                <p class="credit-name">Hiro<br>MIYABI（DSKR）</p>
-            </div>
-
-            <div class="credit-section">
-                <h3>システム開発</h3>
-                <p class="credit-name">千野羅樹夢（サークルDSKR）</p>
-            </div>
-            <div class="credit-section">
-                <h3>support</h3>
-                <p class="credit-name" style="color: #aaa; font-size: 0.9rem; font-weight: normal;">（サポーターが追加された際に記載します）</p>
-            </div>
-        </div>
-
-        <div class="contact-info">
-            <h3 style="margin-top: 0; color: #87CEEB;">運営者情報（お問い合わせ先）</h3>
-            <p><strong>制作者：</strong>千野 羅樹夢 (Jumu Tinora)<br>
-            <strong>所属：</strong>デジタルハリウッドサークル DSKR<br>
-            <strong>所在地：</strong>〒101-0062 東京都千代田区神田駿河台4-6 御茶ノ水ソラシティ アカデミア 3F/4F<br>
-            <strong>メールアドレス：</strong>tinora.gameproject@gmail.com<br>
-            <strong>サークル公式HP：</strong><a href="https://dskr-home.vercel.app/#home" target="_blank">https://dskr-home.vercel.app/#home</a></p>
-        </div>
+  <header class="page-header">
+    <div class="inner">
+      <h1>プライバシーポリシー</h1>
+      <p>Desktop Mascot / 最終更新日: 2026年6月18日</p>
     </div>
+  </header>
 
-    <a href="index.html" class="btn-back">サイトのトップに戻る</a>
+  <main>
+    <div class="inner">
+      <p class="notice">
+        デジタルハリウッドサークルDSKR（以下「当サークル」）は、Desktop Mascot（以下「本アプリ」）および本サイトにおける情報の取り扱いを以下の通り定めます。
+      </p>
 
+      <h2>1. 取得する情報</h2>
+      <p>
+        本サイトは、問い合わせメールを送信された場合を除き、氏名、住所、電話番号などの個人情報を直接取得しません。
+        本アプリは、設定やプレイ状態など、アプリの動作に必要な情報をユーザーの端末内に保存する場合があります。
+      </p>
+
+      <h2>2. Google APIを利用する機能について</h2>
+      <p>
+        Googleカレンダー、Googleドライブ等と連携する機能をユーザーが有効にした場合、本アプリはその機能を提供するために必要な範囲でGoogle APIにアクセスすることがあります。
+        取得する情報は、予定の表示、設定やメモのバックアップなど、ユーザーが選択した機能の実行目的にのみ使用します。
+      </p>
+
+      <h2>3. 保存先と管理</h2>
+      <p>
+        本アプリで扱う設定情報、認証に必要な情報、ゲーム進行情報は、原則としてユーザーの端末内で保存・処理します。
+        当サークルが外部サーバーにユーザーデータを蓄積する機能を追加する場合は、目的、保存内容、保存期間を本ページで明記します。
+      </p>
+
+      <h2>4. 第三者提供</h2>
+      <p>
+        当サークルは、法令に基づく場合を除き、本アプリを通じて取得したユーザー情報を第三者に販売、共有、提供しません。
+      </p>
+
+      <h2>5. Google API Services User Data Policy</h2>
+      <p>
+        Google APIから取得した情報の利用および他アプリへの転送は、Limited Use要件を含む
+        <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>
+        に準拠します。
+      </p>
+
+      <h2>6. 広告と外部サービス</h2>
+      <p>
+        本サイトでは、Google AdSense等の広告サービスを利用する場合があります。広告サービスではCookie等が使用されることがあります。
+        広告を掲載する場合は、本文やアプリ情報などのパブリッシャーコンテンツと関連付く場所に限定し、内容が十分でない画面、エラー画面、操作だけを目的とする画面には広告を配置しません。
+      </p>
+
+      <h2>7. お問い合わせ</h2>
+      <p>
+        本ポリシーに関するお問い合わせは、以下の連絡先までお願いいたします。
+      </p>
+      <p>
+        制作者: 千野 羅樹夢 (Jumu Tinora)<br>
+        所属: デジタルハリウッドサークル DSKR<br>
+        メールアドレス: tinora.gameproject@gmail.com
+      </p>
+
+      <h2>8. 改定</h2>
+      <p>
+        当サークルは、機能追加、配布形態の変更、法令や外部サービスの規約変更に応じて、本ポリシーを改定することがあります。
+        改定後の内容は、本サイトに掲載した時点から適用されます。
+      </p>
+
+      <a class="back-link" href="index.html">トップページに戻る</a>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="inner">
+      Desktop Mascot / DSKR / tinora.gameproject@gmail.com
+    </div>
+  </footer>
 </body>
 </html>
