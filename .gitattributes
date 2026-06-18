@@ -1,3 +1,5 @@
+/.gitattributes text eol=lf
+/.editorconfig text eol=lf
 *.bat text eol=crlf
 *.html text eol=lf
 *.css text eol=lf
