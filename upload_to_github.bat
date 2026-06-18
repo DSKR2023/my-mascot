@@ -23,7 +23,7 @@ cd /d "%PROJECT_DIR%"
 set "REPO_URL=https://github.com/DSKR2023/my-mascot.git"
 set "BRANCH=main"
 set "COMMIT_MSG=Update Desktop Mascot site for ad review"
-set "FILES=.editorconfig index.html privacy.html terms.html robots.txt sitemap.xml ads.txt README.md upload_to_github.bat"
+set "FILES=.editorconfig .gitattributes index.html privacy.html terms.html robots.txt sitemap.xml ads.txt README.md upload_to_github.bat"
 
 echo.
 echo Desktop Mascot site upload script
