@@ -7,7 +7,7 @@ if /I not "%~1"=="--worker" (
   copy /Y "%~f0" "!WORKER_BAT!" >nul
   if errorlevel 1 (
     echo Failed to create temporary upload worker.
-    timeout /t 15 /nobreak >nul
+    ping -n 16 127.0.0.1 >nul
     exit /b 1
   )
   call "!WORKER_BAT!" --worker "%~dp0"
@@ -123,12 +123,12 @@ echo.
 echo Upload completed.
 echo Branch: %BRANCH%
 echo Commit message: %COMMIT_MSG%
-timeout /t 8 /nobreak >nul
+ping -n 9 127.0.0.1 >nul
 exit /b 0
 
 :error
 echo.
 echo Upload failed. Check the message above, GitHub login, and repository permission.
 if exist "%SYNC_DIR%" rmdir /S /Q "%SYNC_DIR%" >nul 2>nul
-timeout /t 15 /nobreak >nul
+ping -n 16 127.0.0.1 >nul
 exit /b 1
